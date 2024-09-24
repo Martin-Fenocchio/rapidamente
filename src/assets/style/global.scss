@@ -1,0 +1,96 @@
+/* geist-sans-latin-400-normal */
+@font-face {
+  font-family: "Geist Sans";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(@fontsource/geist-sans/files/geist-sans-latin-400-normal.woff2)
+      format("woff2"),
+    url(@fontsource/geist-sans/files/geist-sans-latin-400-normal.woff)
+      format("woff");
+}
+
+$blue: #274690;
+$orange: #f6af65;
+$green: #5bc8af;
+
+* {
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  font-family: "Geist Sans", sans-serif;
+}
+
+*,
+*::before,
+*::after i {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+img,
+video,
+svg {
+  height: auto;
+  max-width: 100%;
+}
+
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex {
+  display: flex;
+}
+
+@mixin column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin capitalize {
+  text-transform: capitalize;
+}
+
+.hover {
+  cursor: pointer;
+}
+
+main {
+  max-width: 720px;
+  margin: auto;
+}

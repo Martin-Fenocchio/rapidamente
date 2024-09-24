@@ -1,0 +1,62 @@
+@import "./global.scss";
+
+.bar {
+  background-color: $green;
+  position: fixed;
+  top: 32px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+
+  p {
+    color: white;
+    display: flex;
+    width: 180px;
+  }
+}
+
+.onboarding-screen {
+  @include column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0px;
+  height: 100vh;
+
+  .logo {
+    width: 65%;
+  }
+
+  h3 {
+    text-align: center;
+    margin-top: 80px;
+    width: 65%;
+
+    span {
+      &:first-of-type {
+        color: $orange;
+        font-weight: 900;
+      }
+      &:last-of-type {
+        color: $green;
+        font-weight: 900;
+      }
+    }
+  }
+
+  button {
+    background-color: $blue;
+    border: none;
+    border-radius: 8px;
+    width: 50%;
+    margin-top: 80px;
+    height: 40px;
+    color: white;
+    font-weight: bolder;
+  }
+
+  .score {
+    color: rgb(88, 88, 88);
+    margin-top: 16px;
+    font-size: 14px;
+  }
+}
