@@ -1,3 +1,4 @@
+@import "https://unpkg.com/transition-style";
 /* geist-sans-latin-400-normal */
 @font-face {
   font-family: "Geist Sans";
@@ -93,4 +94,13 @@ svg {
 main {
   max-width: 720px;
   margin: auto;
+}
+
+*[transition-style="in:circle:center"] {
+  --transition__duration: 2.5s;
+  animation-duration: 2.5s;
+}
+*[transition-style="out:circle:center"] {
+  --transition__duration: 1s;
+  animation-duration: 1s;
 }

@@ -1,7 +1,22 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo from "src/assets/images/menterapida.svg";
 import "src/assets/style/onboarding.scss";
+import "transition-style";
 
 function OnboardingScreen() {
+  const navigate = useNavigate();
+
+  const [showAnimation, setShowAnimation] = useState(false);
+
+  const handleStartGame = () => {
+    setShowAnimation(true);
+
+    setTimeout(() => {
+      navigate("/game");
+    }, 800);
+  };
+
   return (
     <>
       <div className="bar">
@@ -19,8 +34,15 @@ function OnboardingScreen() {
           <span>rápidas</span> cuentas matemáticas{" "}
         </h3>
 
-        <button>Comenzar</button>
+        <button onClick={handleStartGame}>Comenzar</button>
         <p className="score">Tu récord: 76 puntos</p>
+
+        {showAnimation && (
+          <div
+            className="circle-animation"
+            transition-style="in:circle:center"
+          ></div>
+        )}
       </main>
     </>
   );

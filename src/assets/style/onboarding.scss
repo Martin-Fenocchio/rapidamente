@@ -15,6 +15,15 @@
   }
 }
 
+.circle-animation {
+  background-color: $blue;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  position: fixed;
+}
+
 .onboarding-screen {
   @include column;
   align-items: center;
@@ -46,6 +55,7 @@
   button {
     background-color: $blue;
     border: none;
+    cursor: pointer;
     border-radius: 8px;
     width: 50%;
     margin-top: 80px;
