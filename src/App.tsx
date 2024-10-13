@@ -1,5 +1,3 @@
-import { RouterProvider } from "react-router-dom";
-import { router } from "./utils/router/router-utils";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import "animate.css";
 import OnboardingScreen from "./features/onboarding/screen/onboarding-screen";
