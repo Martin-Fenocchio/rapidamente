@@ -108,6 +108,16 @@
         -webkit-transform: skewX(-10deg);
       }
     }
+
+    &[data-index-is-even="true"] {
+      h2 {
+        background-color: $green;
+      }
+
+      .grid button {
+        background-color: $orange;
+      }
+    }
   }
 
   .calculation-result {
@@ -139,6 +149,32 @@
       font-size: 14px;
       margin-top: 12px;
       color: black;
+    }
+  }
+
+  @media (max-width: 767px) {
+    padding-top: 24px;
+    .logo {
+      margin-bottom: 32px;
+      width: 90%;
+    }
+
+    .countdown {
+      padding-right: 8px;
+      font-size: 90px;
+    }
+
+    div[role="progressbar"] {
+      margin-bottom: 32px;
+      width: 90%;
+    }
+
+    .calculation {
+      width: 90%;
+    }
+
+    .calculation-result {
+      width: 90%;
     }
   }
 }

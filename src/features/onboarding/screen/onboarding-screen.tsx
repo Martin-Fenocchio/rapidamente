@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "src/assets/images/menterapida.svg";
 import "src/assets/style/onboarding.scss";
+import {
+  checkVavePlayedToday,
+  getMaxPointsOfDay
+} from "src/utils/points/points-utils";
 import "transition-style";
+import OnboardingPlayer from "../components/onboarding-player";
+import HavePlayedBlocker from "../components/have-played-blocker";
+import Marquee from "react-fast-marquee";
 
 function OnboardingScreen() {
   const navigate = useNavigate();
 
   const [showAnimation, setShowAnimation] = useState(false);
+  const [historicalRecord, setHistoricalRecord] = useState(0);
+  const [havePlayedToday, setHavePlayedToday] = useState(false);
 
   const handleStartGame = () => {
     setShowAnimation(true);
@@ -17,31 +26,34 @@ function OnboardingScreen() {
     }, 800);
   };
 
+  useEffect(() => {
+    setHistoricalRecord(getMaxPointsOfDay());
+    setHavePlayedToday(checkVavePlayedToday());
+  }, []);
+
   return (
     <>
-      <div className="bar">
-        {Array(50)
-          .fill(0)
-          .map((_, index) => (
-            <p key={index}>≠ ≤ 3√a ∑ |x-y| % Π φ ∫∫</p>
-          ))}
+      <div style={{ opacity: showAnimation ? 0 : 1 }}>
+        <Marquee>
+          ≠ ≤ 3√a ∑ |x-y| % Π φ ∫∫≠ ≤ 3√a ∑ |x-y| % Π φ ∫∫≠ ≤ 3√a ∑ |x-y| % Π φ
+          ∫∫≠ ≤ 3√a ∑ |x-y| % Π φ ∫∫≠ ≤ 3√a ∑ |x-y| % Π φ ∫∫≠ ≤ 3√a ∑ |x-y| % Π
+          φ ∫∫≠ ≤ 3√a ∑ |x-y| % Π φ
+        </Marquee>
       </div>
       <main className="onboarding-screen">
         <img src={Logo} className="logo" />
 
-        <h3>
-          Entrena tu mente y compite con otros en <span>simples</span> pero{" "}
-          <span>rápidas</span> cuentas matemáticas{" "}
-        </h3>
-
-        <button onClick={handleStartGame}>Comenzar</button>
-        <p className="score">Tu récord: 76 puntos</p>
-
-        {showAnimation && (
-          <div
-            className="circle-animation"
-            transition-style="in:circle:center"
-          ></div>
+        {havePlayedToday ? (
+          <HavePlayedBlocker />
+        ) : (
+          <OnboardingPlayer
+            {...{
+              showAnimation,
+              historicalRecord,
+              havePlayedToday,
+              handleStartGame
+            }}
+          />
         )}
       </main>
     </>

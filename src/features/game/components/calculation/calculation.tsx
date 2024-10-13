@@ -1,48 +1,112 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactCardFlip from "react-card-flip";
+import { Operation } from "../../models/games-model";
 
 interface Props {
   timeIsOver: boolean;
-  onFinish: () => void;
+  operation: Operation;
+  operationIndex: number;
+  onAnswer: (result: boolean) => void;
+  setCountdown: React.Dispatch<React.SetStateAction<number>>;
 }
-function Calculation({ timeIsOver, ...props }: Props) {
-  const options = [4, 8, 1, 2];
 
+let intervalID = 0;
+
+function Calculation({ timeIsOver, operation, setCountdown, ...props }: Props) {
   const [isFail, setIsFail] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [options, setOptions] = useState<number[]>([]);
 
-  const handleOnAnswer = (index: number) => {
-    const isCorrect = index === 0;
+  const onStartQuestion = async () => {
+    setCountdown(3);
+    clearInterval(intervalID);
+
+    intervalID = setInterval(() => {
+      setCountdown((prevCountdown) => {
+        console.log("prevCountdown", prevCountdown, operation.operation);
+
+        if (prevCountdown === 0) {
+          console.log("onTimeOver", operation.operation);
+
+          onTimeOver();
+          return 0;
+        }
+        return prevCountdown! - 1;
+      });
+    }, 1000);
+  };
+
+  const onTimeOver = () => {
+    clearInterval(intervalID);
+
+    setTimeout(() => {
+      setCountdown(-1);
+    }, 1000);
+
+    props.onAnswer(false);
+    setTimeout(() => {}, 500);
+  };
+
+  const handleOnAnswer = (optionSelected: number) => {
+    const isCorrect = optionSelected === operation.result;
 
     setIsCorrect(isCorrect);
     setIsFail(!isCorrect);
 
-    props.onFinish();
+    props.onAnswer(isCorrect);
   };
 
+  const generateOptions = (): number[] => {
+    const options = new Set();
+    const correctValue = operation.result;
+
+    options.add(correctValue);
+
+    while (options.size < 4) {
+      const variants = Math.floor(Math.random() * 10) - 5;
+      const wrongOption = correctValue + variants;
+      if (wrongOption !== correctValue && wrongOption >= 0) {
+        options.add(wrongOption);
+      }
+    }
+
+    return Array.from(options).sort(() => Math.random() - 0.5) as number[];
+  };
+
+  useEffect(() => {
+    setIsFail(false);
+    setIsCorrect(false);
+    setOptions(generateOptions());
+    onStartQuestion();
+  }, [operation.operation]);
+
+  const flipped = isFail || isCorrect || timeIsOver;
+
   return (
-    <ReactCardFlip
-      isFlipped={isFail || isCorrect || timeIsOver}
-      flipDirection="horizontal"
-    >
-      <article className="calculation">
-        <h2>2 + 2</h2>
+    <ReactCardFlip isFlipped={flipped} flipDirection="horizontal">
+      <article
+        className="calculation"
+        data-index-is-even={props.operationIndex % 2 == 0}
+      >
+        <h2>{operation.operation}</h2>
         <h4>=</h4>
 
-        <div className="grid">
-          {options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => handleOnAnswer(index)}
-              className="animate__animated animate__bounceIn"
-              style={{
-                animationDelay: `${index ? index * 0.1 : 0}s`
-              }}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
+        {!flipped && (
+          <div className="grid">
+            {options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => handleOnAnswer(option)}
+                className="animate__animated animate__bounceIn"
+                style={{
+                  animationDelay: `${index ? index * 0.1 : 0}s`
+                }}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        )}
       </article>
       <article className="calculation-result" data-is-correct={isCorrect}>
         {isCorrect ? (
@@ -51,7 +115,7 @@ function Calculation({ timeIsOver, ...props }: Props) {
           <>
             <h3>{!isFail ? "Se agotó el tiempo" : "Incorrecto!"}</h3>
 
-            {isFail && <p>La respuesta correcta es 4</p>}
+            {isFail && <p>La respuesta correcta es {operation.result}</p>}
           </>
         )}
       </article>

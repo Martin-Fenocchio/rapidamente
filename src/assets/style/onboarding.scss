@@ -1,18 +1,15 @@
 @import "./global.scss";
 
-.bar {
+body {
+  overflow-x: hidden;
+}
+
+.rfm-marquee-container {
   background-color: $green;
-  position: fixed;
-  top: 32px;
   height: 30px;
   display: flex;
-  align-items: center;
-
-  p {
-    color: white;
-    display: flex;
-    width: 180px;
-  }
+  margin-top: 30px;
+  color: white;
 }
 
 .circle-animation {
@@ -27,8 +24,7 @@
 .onboarding-screen {
   @include column;
   align-items: center;
-  justify-content: center;
-  padding: 48px 0px;
+  padding: 100px 0px;
   height: 100vh;
 
   .logo {
@@ -59,7 +55,8 @@
     border-radius: 8px;
     width: 50%;
     margin-top: 80px;
-    height: 40px;
+    height: unset;
+    padding: 12px 0px;
     color: white;
     font-weight: bolder;
   }
@@ -68,5 +65,48 @@
     color: rgb(88, 88, 88);
     margin-top: 16px;
     font-size: 14px;
+  }
+
+  .points-of-today {
+    background-color: $blue;
+    display: block;
+    width: max-content;
+    color: white;
+    font-weight: bold;
+    padding: 4px 8px;
+  }
+
+  .ticket {
+    margin-top: 32px;
+  }
+
+  &:has(.onboaring-player) {
+    justify-content: center;
+  }
+
+  @media (max-width: 767px) {
+    height: unset;
+
+    .logo {
+      width: 90%;
+    }
+
+    h3 {
+      margin-top: 80px;
+      width: 90%;
+    }
+
+    button {
+      width: 90%;
+    }
+
+    &:has(.have-played-blocker) {
+      justify-content: flex-start;
+      padding-top: 100px;
+
+      h3 {
+        margin-top: 50px;
+      }
+    }
   }
 }

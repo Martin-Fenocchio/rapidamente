@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "src/assets/style/game.scss";
 
 interface Props {
-  setHaveFinishedCountdown: (value: boolean) => void;
+  onFinishCountdown: (value: boolean) => void;
 }
 
 function Countdown(props: Props) {
@@ -13,7 +13,7 @@ function Countdown(props: Props) {
       const timer = setTimeout(() => setCount(count - 1), 1000);
       return () => clearTimeout(timer);
     } else {
-      props.setHaveFinishedCountdown(true);
+      props.onFinishCountdown(true);
     }
   }, [count]);
 

@@ -1,48 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Countdown from "../components/countdown/countdown";
 import Calculation from "../components/calculation/calculation";
 import Logo from "src/assets/images/menterapida.svg";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from "react-router-dom";
+import { OPERATIONS as OperationsList } from "../data/operations";
+import { savePointsOfDay } from "src/utils/points/points-utils";
+import { setStateAsync } from "src/utils/misc/misc";
 
 function GameScreen() {
   const navigate = useNavigate();
 
-  const [intervalId, setintervalId] = useState(0);
+  const [operationIndex, setOperationIndex] = useState(0);
+  const [operations, setOperations] = useState(OperationsList[0]);
   const [countdown, setCountdown] = useState(3);
 
   const [haveFinishedCountdown, setHaveFinishedCountdown] = useState(false);
 
-  const onStartQuestion = () => {
-    setHaveFinishedCountdown(true);
+  const onAnswer = (isCorrect: boolean) => {
+    const wasLastOperation = operationIndex === OperationsList.length - 1;
 
-    const newIntervalId = setInterval(() => {
-      setCountdown((prevCountdown) => {
-        if (prevCountdown === 1) {
-          clearInterval(newIntervalId);
+    if (!isCorrect || wasLastOperation) {
+      onFinishGmae();
 
-          setTimeout(() => {
-            setCountdown(-1);
-            onTimeOver();
-          }, 1000);
+      return;
+    }
 
-          return 0;
-        }
-        return prevCountdown! - 1;
-      });
-    }, 1000);
-
-    setintervalId(newIntervalId);
+    setCountdown(3);
+    setOperationIndex((prevIndex) => prevIndex + 1);
   };
 
-  const onFinishGame = () => {
+  const onFinishGmae = async () => {
+    const pointsMade = (await setStateAsync(setOperationIndex)) + 1;
+
+    savePointsOfDay(pointsMade);
+
     setTimeout(() => {
-      navigate("/score");
+      navigate("/score", {
+        state: {
+          points: pointsMade
+        },
+        replace: true
+      });
     }, 2000);
-  };
-
-  const onTimeOver = () => {
-    clearInterval(intervalId);
   };
 
   const calculatePercentage = (countdown: number | null) => {
@@ -50,22 +50,31 @@ function GameScreen() {
     return (countdown / 3) * 100;
   };
 
+  useEffect(() => {
+    setOperations(OperationsList[Math.floor(Math.random() * 10)]);
+  }, []);
+
   return (
     <>
       <div
         className="circle-animation"
         transition-style="out:circle:center"
       ></div>
-      {countdown}
       <main className="game-screen">
         <img src={Logo} className="logo" />
 
         {!haveFinishedCountdown ? (
-          <Countdown setHaveFinishedCountdown={onStartQuestion} />
+          <Countdown onFinishCountdown={() => setHaveFinishedCountdown(true)} />
         ) : (
           <>
             <ProgressBar completed={calculatePercentage(countdown)} />
-            <Calculation onFinish={onFinishGame} timeIsOver={countdown < 0} />
+            <Calculation
+              onAnswer={onAnswer}
+              setCountdown={setCountdown}
+              operation={operations[operationIndex]}
+              operationIndex={operationIndex}
+              timeIsOver={countdown < 0}
+            />
           </>
         )}
       </main>

@@ -1,10 +1,20 @@
-export function HistoryGrid() {
-  const data = [
-    ["inactive", "inactive", "points", "points", "record", "no", "points"],
-    ["points", "no", "points", "record", "no", "points", "points"],
-    ["no", "points", "points", "points", "points", "points", "points"],
-    ["record", "no", "points", "no", "points", "points", "record"]
-  ];
+import { getDaysInCurrentMonth } from "src/utils/date-utils";
+
+interface Props {
+  weeks: (string | null)[][];
+}
+
+export function HistoryGrid({ weeks }: Props) {
+  const handleGetWeekPrefix = (week: (string | null)[], i: number) => {
+    const firstDay = i * 7 + 1;
+    const lastDay = Math.min((i + 1) * 7, getDaysInCurrentMonth());
+    return week.some((day) => day)
+      ? `${String(firstDay).padStart(2, "0")}-${String(lastDay).padStart(
+          2,
+          "0"
+        )}`
+      : "";
+  };
 
   return (
     <div className="grid">
@@ -18,11 +28,13 @@ export function HistoryGrid() {
         <span>S</span>
         <span>D</span>
       </div>
-      {data.map((row, i) => (
+      {weeks.map((week, i) => (
         <div className="row" key={i}>
-          <p className="week">1-7</p>
-          {row.map((type, j) => (
-            <HistoryGridPoint key={j} type={type} />
+          <p className="week">{handleGetWeekPrefix(week, i)}</p>
+          {week.map((day, j) => (
+            <div key={j} className="day">
+              {day ? <HistoryGridPoint key={j} type={day} /> : <div />}
+            </div>
           ))}
         </div>
       ))}

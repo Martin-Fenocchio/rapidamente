@@ -3,31 +3,42 @@ import { HistoryGrid } from "../components/grid/history-grid";
 import "src/assets/style/score-screen.scss";
 import "src/assets/style/ticket.scss";
 import Ticket from "../components/ticket/ticket";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { calculateWeeks } from "src/utils/date-utils";
+import ShareResultsButton from "../components/share/share-results-button";
 
 function ScoreScreen() {
+  const location = useLocation();
+  const [weeks, setWeeks] = useState<(string | null)[][]>([]);
+
+  const points = location.state?.points ?? 0;
+
+  const handleResetGame = () => {
+    if (import.meta.env.DEV) {
+      localStorage.removeItem("points");
+      window.location.href = "/";
+    }
+  };
+
+  useEffect(() => {
+    setWeeks(calculateWeeks());
+  }, []);
+
   return (
     <main className="score-screen">
-      <img src={Logo} className="logo" />
+      <img src={Logo} className="logo" onClick={handleResetGame} />
 
-      {/*   <div className="score-container">
-        <h3>Tu puntaje fue:</h3>
-        <h2>23</h2>
-
-        <p className="record">
-          Tu record es <span>45</span>
-        </p>
-      </div> */}
-
-      <Ticket />
+      <Ticket points={points} />
 
       <h4>Tu ranking mensual:</h4>
-      <HistoryGrid />
+      <HistoryGrid weeks={weeks} />
 
       <p className="desc-grid">
         Vuelve <span>mañana</span> para completar tu proximo cuadrado!
       </p>
 
-      <button>Compartir resultados</button>
+      <ShareResultsButton points={points} />
     </main>
   );
 }

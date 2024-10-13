@@ -1,13 +1,26 @@
+import { useEffect, useState } from "react";
 import TicketBackground from "src/assets/images/ticket.svg";
 
-function Ticket() {
+interface Props {
+  points: number;
+}
+
+function Ticket({ points }: Props) {
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+    setDate(new Date().toLocaleString().split(",")[0].replace(/\//g, "-"));
+  }, []);
+
   return (
     <div className="ticket">
       <img src={TicketBackground} className="ticket-background" />
 
       <div className="borders">
-        <h2>27 PUNTOS</h2>
-        <p>28-09-24</p>
+        <h2>
+          {points} PUNTO{points == 1 ? "" : "S"}
+        </h2>
+        <p>{date}</p>
       </div>
     </div>
   );
