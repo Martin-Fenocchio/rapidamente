@@ -5,7 +5,6 @@ import GameScreen from "./features/game/screen/game-screen";
 import ScoreScreen from "./features/score/screen/score-screen";
 
 function App() {
-  //return <RouterProvider router={router} />;
   return (
     <Router>
       <Routes>
