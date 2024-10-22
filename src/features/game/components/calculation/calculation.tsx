@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactCardFlip from "react-card-flip";
 import { Operation } from "../../models/games-model";
+import { GAME_TIME } from "../../screen/game-screen";
 
 interface Props {
   timeIsOver: boolean;
@@ -18,16 +19,12 @@ function Calculation({ timeIsOver, operation, setCountdown, ...props }: Props) {
   const [options, setOptions] = useState<number[]>([]);
 
   const onStartQuestion = async () => {
-    setCountdown(3);
+    setCountdown(GAME_TIME);
     clearInterval(intervalID);
 
     intervalID = setInterval(() => {
       setCountdown((prevCountdown) => {
-        console.log("prevCountdown", prevCountdown, operation.operation);
-
-        if (prevCountdown === 0) {
-          console.log("onTimeOver", operation.operation);
-
+        if (prevCountdown <= 0) {
           onTimeOver();
           return 0;
         }
@@ -43,8 +40,9 @@ function Calculation({ timeIsOver, operation, setCountdown, ...props }: Props) {
       setCountdown(-1);
     }, 1000);
 
-    props.onAnswer(false);
-    setTimeout(() => {}, 500);
+    setTimeout(() => {
+      props.onAnswer(false);
+    }, 1000);
   };
 
   const handleOnAnswer = (optionSelected: number) => {
@@ -108,7 +106,11 @@ function Calculation({ timeIsOver, operation, setCountdown, ...props }: Props) {
           </div>
         )}
       </article>
-      <article className="calculation-result" data-is-correct={isCorrect}>
+      <article
+        className="calculation-result"
+        data-is-fail={isFail || timeIsOver}
+        data-is-correct={isCorrect}
+      >
         {isCorrect ? (
           <h3>Correcto!</h3>
         ) : (

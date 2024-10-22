@@ -129,11 +129,15 @@
     padding: 32px;
     border: 1px solid rgb(211, 211, 211);
     border-radius: 12px;
-    background-color: rgba(255, 0, 0, 0.292);
-    border: 1px solid red;
-    color: red;
+
     font-weight: bolder;
     font-size: 24px;
+
+    &[data-is-fail="true"] {
+      background-color: rgba(255, 0, 0, 0.292);
+      border: 1px solid red;
+      color: red;
+    }
 
     &[data-is-correct="true"] {
       background-color: $green;

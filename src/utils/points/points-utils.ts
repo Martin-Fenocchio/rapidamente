@@ -85,7 +85,7 @@ export const handleShareResults = (
     )
     .join("\n");
 
-  payload += "\n\nJuega en https://menterapida.com";
+  payload += "\n\nJuega en https://www.martinfenocchio.com/rapidamente";
   console.log(payload);
 
   setSetMessage(payload);

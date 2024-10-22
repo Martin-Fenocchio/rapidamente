@@ -8,12 +8,14 @@ import { OPERATIONS as OperationsList } from "../data/operations";
 import { savePointsOfDay } from "src/utils/points/points-utils";
 import { setStateAsync } from "src/utils/misc/misc";
 
+export const GAME_TIME = 2.5;
+
 function GameScreen() {
   const navigate = useNavigate();
 
   const [operationIndex, setOperationIndex] = useState(0);
   const [operations, setOperations] = useState(OperationsList[0]);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(GAME_TIME);
 
   const [haveFinishedCountdown, setHaveFinishedCountdown] = useState(false);
 
@@ -26,7 +28,7 @@ function GameScreen() {
       return;
     }
 
-    setCountdown(3);
+    setCountdown(GAME_TIME);
     setOperationIndex((prevIndex) => prevIndex + 1);
   };
 
@@ -47,12 +49,14 @@ function GameScreen() {
 
   const calculatePercentage = (countdown: number | null) => {
     if (countdown === null) return 0;
-    return (countdown / 3) * 100;
+    return (countdown / GAME_TIME) * 100;
   };
 
   useEffect(() => {
     setOperations(OperationsList[Math.floor(Math.random() * 10)]);
   }, []);
+
+  const percentage = calculatePercentage(countdown);
 
   return (
     <>
@@ -67,13 +71,13 @@ function GameScreen() {
           <Countdown onFinishCountdown={() => setHaveFinishedCountdown(true)} />
         ) : (
           <>
-            <ProgressBar completed={calculatePercentage(countdown)} />
+            <ProgressBar completed={percentage < 0 ? 0 : percentage} />
             <Calculation
               onAnswer={onAnswer}
               setCountdown={setCountdown}
               operation={operations[operationIndex]}
               operationIndex={operationIndex}
-              timeIsOver={countdown < 0}
+              timeIsOver={countdown <= -1}
             />
           </>
         )}
