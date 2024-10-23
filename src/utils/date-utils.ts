@@ -59,10 +59,12 @@ export const calculateWeeks = () => {
           .toLocaleString()
           .split(",")[0];
 
-        const record = history.find((record) => record.date === dateStr);
-        const isCompletedDay = record?.pointsOfDay == 10;
+        const hasPoints = history.find((record) => record.date === dateStr);
+        const isRecordPoints = hasPoints?.pointsOfDay == 10;
 
-        week.push(isCompletedDay ? "record" : record ? "points" : "inactive");
+        week.push(
+          isRecordPoints ? "record" : hasPoints ? "points" : "inactive"
+        );
         day++;
       }
     }
