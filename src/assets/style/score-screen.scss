@@ -127,6 +127,7 @@
           background-color: rgb(23, 225, 175);
         }
 
+        &[data-type="wrong"],
         &[data-type="no"] {
           border-color: rgb(192, 43, 43);
           background-color: rgb(255, 108, 108);

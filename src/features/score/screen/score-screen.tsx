@@ -7,10 +7,12 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { calculateWeeks } from "src/utils/date-utils";
 import ShareResultsButton from "../components/share/share-results-button";
+import Confetti from "react-confetti";
 
 function ScoreScreen() {
   const location = useLocation();
   const [weeks, setWeeks] = useState<(string | null)[][]>([]);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const points = location.state?.points ?? 0;
 
@@ -23,10 +25,15 @@ function ScoreScreen() {
 
   useEffect(() => {
     setWeeks(calculateWeeks());
+
+    if (points == 10) {
+      setShowConfetti(true);
+    }
   }, []);
 
   return (
     <main className="score-screen">
+      {showConfetti && <Confetti />}
       <img src={Logo} className="logo" onClick={handleResetGame} />
 
       <Ticket points={points} />
@@ -35,7 +42,7 @@ function ScoreScreen() {
       <HistoryGrid weeks={weeks} />
 
       <p className="desc-grid">
-        Vuelve <span>mañana</span> para completar tu proximo cuadrado!
+        Volvé <span>mañana</span> para completar tu proximo cuadrado!
       </p>
 
       <ShareResultsButton points={points} />

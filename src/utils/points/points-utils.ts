@@ -73,6 +73,9 @@ export const handleShareResults = (
         .map((day) => {
           if (day === "record") {
             return "🏆";
+          }
+          if (day === "wrong") {
+            return "🟥";
           } else if (day === "points") {
             return "🟩";
           } else if (day == null) {

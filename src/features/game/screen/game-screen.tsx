@@ -13,7 +13,7 @@ export const GAME_TIME = 2.5;
 function GameScreen() {
   const navigate = useNavigate();
 
-  const [operationIndex, setOperationIndex] = useState(0);
+  const [operationIndex, setOperationIndex] = useState<number>(0);
   const [operations, setOperations] = useState(OperationsList[0]);
   const [countdown, setCountdown] = useState(GAME_TIME);
 
@@ -23,17 +23,20 @@ function GameScreen() {
     const wasLastOperation = operationIndex === OperationsList.length - 1;
 
     if (!isCorrect || wasLastOperation) {
-      onFinishGmae();
+      onFinishGmae(isCorrect);
 
       return;
     }
 
     setCountdown(GAME_TIME);
-    setOperationIndex((prevIndex) => prevIndex + 1);
+    setOperationIndex((prevIndex: number) => {
+      return prevIndex + 1;
+    });
   };
 
-  const onFinishGmae = async () => {
-    const pointsMade = (await setStateAsync(setOperationIndex)) + 1;
+  const onFinishGmae = async (isCorrect: boolean) => {
+    const pointsMade =
+      (await setStateAsync(setOperationIndex)) + (isCorrect ? 1 : 0);
 
     savePointsOfDay(pointsMade);
 

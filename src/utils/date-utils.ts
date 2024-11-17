@@ -63,7 +63,13 @@ export const calculateWeeks = () => {
         const isRecordPoints = hasPoints?.pointsOfDay == 10;
 
         week.push(
-          isRecordPoints ? "record" : hasPoints ? "points" : "inactive"
+          isRecordPoints
+            ? "record"
+            : hasPoints
+            ? hasPoints.pointsOfDay == 0
+              ? "wrong"
+              : "points"
+            : "inactive"
         );
         day++;
       }
