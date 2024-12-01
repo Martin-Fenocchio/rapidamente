@@ -14,6 +14,7 @@ function Countdown(props: Props) {
       return () => clearTimeout(timer);
     } else {
       props.onFinishCountdown(true);
+      localStorage.setItem("timestamp", new Date().getTime().toString());
     }
   }, [count]);
 

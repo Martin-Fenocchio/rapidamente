@@ -1,12 +1,13 @@
 import { PointsOfDay } from "src/features/game/models/games-model";
 import { calculateWeeks, getNameOfCurrentMonth } from "../date-utils";
 
-export const savePointsOfDay = (points: number) => {
+export const savePointsOfDay = (points: number, time: number) => {
   const date = new Date().toLocaleString().split(",")[0];
 
-  const pointsOfDay = {
+  const pointsOfDay: PointsOfDay = {
     date,
-    pointsOfDay: points
+    pointsOfDay: points,
+    time,
   };
 
   const historical = getHistoricalPoints();
@@ -59,10 +60,7 @@ export const getPointsOfToday = () => {
   return today?.pointsOfDay ?? 0;
 };
 
-export const handleShareResults = (
-  points: number,
-  setSetMessage: React.Dispatch<React.SetStateAction<string>>
-) => {
+export const handleShareResults = (points: number) => {
   const weeks = calculateWeeks();
 
   let payload = `Puntaje del día: ${points}\n\nPuntaje de: ${getNameOfCurrentMonth()}:\n`;
@@ -91,5 +89,5 @@ export const handleShareResults = (
   payload += "\n\nJuega en https://www.martinfenocchio.com/rapidamente";
   console.log(payload);
 
-  setSetMessage(payload);
+  return payload;
 };

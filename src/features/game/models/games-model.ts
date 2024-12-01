@@ -6,4 +6,5 @@ export interface Operation {
 export interface PointsOfDay {
   pointsOfDay: number;
   date: string;
+  time: number;
 }

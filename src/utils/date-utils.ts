@@ -28,7 +28,7 @@ export const getNameOfCurrentMonth = () => {
     "Septiembre",
     "Octubre",
     "Noviembre",
-    "Diciembre"
+    "Diciembre",
   ];
   const now = new Date();
   return months[now.getMonth()];
@@ -78,4 +78,11 @@ export const calculateWeeks = () => {
   }
 
   return payload;
+};
+
+export const calculateTime = (): number => {
+  const startTime = localStorage.getItem("timestamp")!;
+  const endTime = new Date().getTime().toString();
+
+  return (parseInt(endTime) - parseInt(startTime)) / 1000;
 };

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { calculateWeeks } from "src/utils/date-utils";
 import ShareResultsButton from "../components/share/share-results-button";
 import Confetti from "react-confetti";
+import BarsGraph from "../components/bars/bars-graph";
 
 function ScoreScreen() {
   const location = useLocation();
@@ -46,6 +47,8 @@ function ScoreScreen() {
       </p>
 
       <ShareResultsButton points={points} />
+
+      <BarsGraph />
     </main>
   );
 }

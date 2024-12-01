@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { OPERATIONS as OperationsList } from "../data/operations";
 import { savePointsOfDay } from "src/utils/points/points-utils";
 import { setStateAsync } from "src/utils/misc/misc";
+import { calculateTime } from "src/utils/date-utils";
 
 export const GAME_TIME = 2.5;
 
@@ -37,15 +38,17 @@ function GameScreen() {
   const onFinishGmae = async (isCorrect: boolean) => {
     const pointsMade =
       (await setStateAsync(setOperationIndex)) + (isCorrect ? 1 : 0);
+    const time = calculateTime();
 
-    savePointsOfDay(pointsMade);
+    savePointsOfDay(pointsMade, time);
 
     setTimeout(() => {
       navigate("/score", {
         state: {
-          points: pointsMade
+          points: pointsMade,
+          time: time,
         },
-        replace: true
+        replace: true,
       });
     }, 2000);
   };

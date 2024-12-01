@@ -153,6 +153,43 @@
     font-weight: bolder;
   }
 
+  .char-container {
+    background-color: rgb(244, 244, 244);
+    border: 1px solid rgb(215, 214, 214);
+    border-radius: 16px;
+    margin: 20px;
+    margin-top: 32px;
+    padding: 10px;
+    width: calc(100% - 40px);
+
+    h3 {
+      text-align: center;
+      margin-bottom: 8px;
+      color: #f6af65;
+      font-weight: 900;
+    }
+
+    p {
+      text-align: center;
+      margin: auto;
+      margin-bottom: 24px;
+      color: rgb(88, 88, 88);
+      font-size: 14px;
+      width: 95%;
+      text-wrap: pretty;
+
+      span {
+        color: #274690;
+        font-weight: 600;
+      }
+
+      &:last-of-type {
+        margin-bottom: -20px;
+        text-decoration: underline;
+      }
+    }
+  }
+
   @media (max-width: 767px) {
     .logo {
       width: 90%;
