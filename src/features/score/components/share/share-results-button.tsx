@@ -1,6 +1,6 @@
-import { handleShareResults } from "src/utils/points/points-utils";
 import { useEffect, useState } from "react";
 import { WhatsappShareButton } from "react-share";
+import { handleShareResults } from "src/utils/points/points-utils";
 
 interface Props {
   points: number;
@@ -17,21 +17,9 @@ function ShareResultsButton({ points }: Props) {
     button.click();
   }, [message]);
 
-  const handleShare = async () => {
-    const shareData = {
-      title: handleShareResults(points),
-    };
-
-    if (navigator.share != undefined) {
-      navigator.canShare(shareData);
-    } else {
-      setSetMessage(shareData.title);
-    }
-  };
-
   return (
     <>
-      <button onClick={handleShare} className="share-button">
+      <button onClick={() => handleShareResults(points, setSetMessage)}>
         Compartir resultados
       </button>
 

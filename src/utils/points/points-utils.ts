@@ -60,7 +60,10 @@ export const getPointsOfToday = () => {
   return today?.pointsOfDay ?? 0;
 };
 
-export const handleShareResults = (points: number) => {
+export const handleShareResults = (
+  points: number,
+  setSetMessage: React.Dispatch<React.SetStateAction<string>>
+) => {
   const weeks = calculateWeeks();
 
   let payload = `Puntaje del día: ${points}\n\nPuntaje de: ${getNameOfCurrentMonth()}:\n`;
@@ -89,5 +92,5 @@ export const handleShareResults = (points: number) => {
   payload += "\n\nJuega en https://www.martinfenocchio.com/rapidamente";
   console.log(payload);
 
-  return payload;
+  setSetMessage(payload);
 };
