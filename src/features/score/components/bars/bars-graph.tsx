@@ -12,7 +12,7 @@ function BarsGraph() {
   const getGraphData = () => {
     const historicalPoints = getHistoricalPoints();
 
-    let payload = historicalPoints.map((item) => item.time);
+    let payload = historicalPoints.map((item) => item.time ?? 1);
 
     payload = payload.length > 10 ? payload.slice(-10) : payload;
 
@@ -27,7 +27,7 @@ function BarsGraph() {
   const getAverage = () => {
     const historicalPoints = getHistoricalPoints();
 
-    let payload = historicalPoints.map((item) => item.time);
+    let payload = historicalPoints.map((item) => item.time ?? 1);
 
     return parseInt(
       `${payload.reduce((acc, item) => acc + item, 0) / payload.length}`
@@ -42,8 +42,9 @@ function BarsGraph() {
     <div className="char-container">
       <h3>VELOCIDAD</h3>
       <p>
-        Hoy te tomo <span>{parseInt(location.state.time)} segundos</span> el
-        juego, tu promedio es: <span>{getAverage()} segundos</span>.
+        Hoy te tomo <span>{parseInt(location.state.time)} segundos</span>{" "}
+        completar el juego, tu promedio es: <span>{getAverage()} segundos</span>
+        .
       </p>
       <p>Progreso en los últimos 10 días:</p>
       <BarChart
