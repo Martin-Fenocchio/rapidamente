@@ -62,6 +62,7 @@ export const getPointsOfToday = () => {
 
 export const handleShareResults = (
   points: number,
+  time: number,
   setSetMessage: React.Dispatch<React.SetStateAction<string>>
 ) => {
   const weeks = calculateWeeks();
@@ -89,7 +90,9 @@ export const handleShareResults = (
     )
     .join("\n");
 
-  payload += "\n\nJuega en https://www.martinfenocchio.com/rapidamente";
+  payload += `\n\nDuración: ${time.toFixed(
+    1
+  )} segundos,\n\nJuega en https://www.martinfenocchio.com/rapidamente`;
   console.log(payload);
 
   setSetMessage(payload);

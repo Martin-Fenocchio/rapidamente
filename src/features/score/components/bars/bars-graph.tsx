@@ -38,6 +38,8 @@ function BarsGraph() {
     getGraphData();
   }, []);
 
+  console.log("pointsData", pointsData);
+
   return (
     <div className="char-container">
       <h3>VELOCIDAD</h3>
