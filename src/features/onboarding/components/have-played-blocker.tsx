@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import ShareResultsButton from "src/features/score/components/share/share-results-button";
 import Ticket from "src/features/score/components/ticket/ticket";
-import { getPointsOfToday } from "src/utils/points/points-utils";
+import { getScoreOfToday } from "src/utils/points/points-utils";
 
 function HavePlayedBlocker() {
   const [pointsOfDay, setPointsOfDay] = useState(0);
+  const [timeOfToday, setTimeOfToday] = useState(0);
 
   const resetGame = () => {
     if (import.meta.env.DEV) {
@@ -14,7 +15,9 @@ function HavePlayedBlocker() {
   };
 
   useEffect(() => {
-    setPointsOfDay(getPointsOfToday());
+    const score = getScoreOfToday();
+    setPointsOfDay(score?.pointsOfDay ?? 0);
+    setTimeOfToday(score?.time ?? 0);
   }, []);
 
   return (
@@ -29,7 +32,7 @@ function HavePlayedBlocker() {
       </h3>
       <Ticket points={pointsOfDay} />
 
-      <ShareResultsButton points={pointsOfDay} />
+      <ShareResultsButton points={pointsOfDay} time={timeOfToday} />
     </>
   );
 }

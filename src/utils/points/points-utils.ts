@@ -50,14 +50,14 @@ export const checkVavePlayedToday = () => {
   return historical.some((item) => item.date === date);
 };
 
-export const getPointsOfToday = () => {
+export const getScoreOfToday = () => {
   const historical = getHistoricalPoints();
 
   const date = new Date().toLocaleString().split(",")[0];
 
   const today = historical.find((item) => item.date === date);
 
-  return today?.pointsOfDay ?? 0;
+  return today;
 };
 
 export const handleShareResults = (
