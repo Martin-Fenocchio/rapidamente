@@ -67,7 +67,7 @@ export const handleShareResults = (
 ) => {
   const weeks = calculateWeeks();
 
-  let payload = `Puntaje del día: ${points}\n\nPuntaje de: ${getNameOfCurrentMonth()}:\n`;
+  let payload = `Puntaje del día: ${points}\n\nPuntaje de: ${getNameOfCurrentMonth()}:\n\n`;
 
   payload += weeks
     .map((week) =>
@@ -90,9 +90,9 @@ export const handleShareResults = (
     )
     .join("\n");
 
-  payload += `\n\nDuración: ${time.toFixed(
+  payload += `\n\Velocidad: ${(time / points).toFixed(
     1
-  )} segundos,\n\nJuega en https://www.martinfenocchio.com/rapidamente`;
+  )} segundos por cuenta.\n\nJuega en https://www.martinfenocchio.com/rapidamente`;
   console.log(payload);
 
   setSetMessage(payload);
