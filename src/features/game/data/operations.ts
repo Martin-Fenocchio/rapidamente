@@ -16,7 +16,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "8 x 3", result: 24 },
     { operation: "50 / 5 + 6", result: 16 },
     { operation: "7 x 4 - 9", result: 19 },
-    { operation: "60 / 3 x 2", result: 40 }
+    { operation: "60 / 3 x 2", result: 40 },
   ],
   [
     { operation: "8 + 10", result: 18 },
@@ -33,7 +33,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "9 x 4", result: 36 },
     { operation: "45 / 9 + 5", result: 10 },
     { operation: "8 x 5 - 3", result: 37 },
-    { operation: "72 / 6 x 3", result: 36 }
+    { operation: "72 / 6 x 3", result: 36 },
   ],
   [
     { operation: "12 + 14", result: 26 },
@@ -50,7 +50,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "10 x 4", result: 40 },
     { operation: "60 / 10 + 8", result: 14 },
     { operation: "9 x 6 - 2", result: 52 },
-    { operation: "48 / 6 x 3", result: 24 }
+    { operation: "48 / 6 x 3", result: 24 },
   ],
   [
     { operation: "5 + 7", result: 12 },
@@ -67,7 +67,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "11 x 3", result: 33 },
     { operation: "56 / 8 + 9", result: 16 },
     { operation: "12 x 4 - 8", result: 40 },
-    { operation: "18 / 6 x 5", result: 15 }
+    { operation: "18 / 6 x 5", result: 15 },
   ],
   [
     { operation: "9 + 6", result: 15 },
@@ -84,7 +84,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "9 x 7", result: 63 },
     { operation: "64 / 8 + 4", result: 12 },
     { operation: "15 x 2 - 10", result: 20 },
-    { operation: "30 / 5 x 4", result: 24 }
+    { operation: "30 / 5 x 4", result: 24 },
   ],
   [
     { operation: "14 + 6", result: 20 },
@@ -101,7 +101,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "12 x 3", result: 36 },
     { operation: "56 / 8 + 4", result: 11 },
     { operation: "7 x 5 - 4", result: 31 },
-    { operation: "72 / 6 x 2", result: 24 }
+    { operation: "72 / 6 x 2", result: 24 },
   ],
   [
     { operation: "5 + 15", result: 20 },
@@ -118,7 +118,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "15 x 2", result: 30 },
     { operation: "48 / 6 + 5", result: 13 },
     { operation: "14 x 4 - 7", result: 49 },
-    { operation: "80 / 10 x 2", result: 16 }
+    { operation: "80 / 10 x 2", result: 16 },
   ],
   [
     { operation: "18 + 7", result: 25 },
@@ -135,7 +135,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "70 / 7 + 8", result: 18 },
     { operation: "12 x 6 - 10", result: 62 },
     { operation: "13 x 3", result: 39 },
-    { operation: "90 / 15 x 4", result: 24 }
+    { operation: "90 / 15 x 4", result: 24 },
   ],
   [
     { operation: "3 + 17", result: 20 },
@@ -152,7 +152,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "20 x 2", result: 40 },
     { operation: "36 / 4 + 9", result: 18 },
     { operation: "9 x 6 - 8", result: 46 },
-    { operation: "54 / 9 x 5", result: 30 }
+    { operation: "54 / 9 x 5", result: 30 },
   ],
   [
     { operation: "2 + 18", result: 20 },
@@ -169,6 +169,11 @@ export const OPERATIONS: Operation[][] = [
     { operation: "25 x 2", result: 50 },
     { operation: "40 / 4 + 9", result: 19 },
     { operation: "9 x 8 - 10", result: 62 },
-    { operation: "48 / 8 x 3", result: 18 }
-  ]
+    { operation: "48 / 8 x 3", result: 18 },
+  ],
 ];
+
+export const getOperationsOfDay = () => {
+  const today = new Date().getDate();
+  return OPERATIONS[today - 1];
+};

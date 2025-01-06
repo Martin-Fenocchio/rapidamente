@@ -97,7 +97,7 @@ function Calculation({ timeIsOver, operation, setCountdown, ...props }: Props) {
                 onClick={() => handleOnAnswer(option)}
                 className="animate__animated animate__bounceIn"
                 style={{
-                  animationDelay: `${index ? index * 0.1 : 0}s`
+                  animationDelay: `${index ? index * 0.1 : 0}s`,
                 }}
               >
                 {option}

@@ -1,35 +1,14 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Logo from "src/assets/images/menterapida.svg";
 import "src/assets/style/onboarding.scss";
-import {
-  checkVavePlayedToday,
-  getMaxPointsOfDay
-} from "src/utils/points/points-utils";
 import "transition-style";
 import OnboardingPlayer from "../components/onboarding-player";
 import HavePlayedBlocker from "../components/have-played-blocker";
 import Marquee from "react-fast-marquee";
+import { useOnboardingLogic } from "../hooks/onboarding-hook";
 
 function OnboardingScreen() {
-  const navigate = useNavigate();
-
-  const [showAnimation, setShowAnimation] = useState(false);
-  const [historicalRecord, setHistoricalRecord] = useState(0);
-  const [havePlayedToday, setHavePlayedToday] = useState(false);
-
-  const handleStartGame = () => {
-    setShowAnimation(true);
-
-    setTimeout(() => {
-      navigate("/game");
-    }, 800);
-  };
-
-  useEffect(() => {
-    setHistoricalRecord(getMaxPointsOfDay());
-    setHavePlayedToday(checkVavePlayedToday());
-  }, []);
+  const { showAnimation, historicalRecord, havePlayedToday, handleStartGame } =
+    useOnboardingLogic();
 
   return (
     <>
@@ -51,7 +30,7 @@ function OnboardingScreen() {
               showAnimation,
               historicalRecord,
               havePlayedToday,
-              handleStartGame
+              handleStartGame,
             }}
           />
         )}

@@ -4,7 +4,10 @@ import Calculation from "../components/calculation/calculation";
 import Logo from "src/assets/images/menterapida.svg";
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useNavigate } from "react-router-dom";
-import { OPERATIONS as OperationsList } from "../data/operations";
+import {
+  getOperationsOfDay,
+  OPERATIONS as OperationsList,
+} from "../data/operations";
 import { savePointsOfDay } from "src/utils/points/points-utils";
 import { setStateAsync } from "src/utils/misc/misc";
 import { calculateTime } from "src/utils/date-utils";
@@ -59,7 +62,7 @@ function GameScreen() {
   };
 
   useEffect(() => {
-    setOperations(OperationsList[Math.floor(Math.random() * 10)]);
+    setOperations(getOperationsOfDay());
   }, []);
 
   const percentage = calculatePercentage(countdown);

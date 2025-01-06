@@ -1,28 +1,13 @@
-import { useEffect, useState } from "react";
 import ShareResultsButton from "src/features/score/components/share/share-results-button";
 import Ticket from "src/features/score/components/ticket/ticket";
-import { getScoreOfToday } from "src/utils/points/points-utils";
+import { useHavePlayedBlocker } from "../hooks/have-played-blocker-hook";
 
 function HavePlayedBlocker() {
-  const [pointsOfDay, setPointsOfDay] = useState(0);
-  const [timeOfToday, setTimeOfToday] = useState(0);
-
-  const resetGame = () => {
-    if (import.meta.env.DEV) {
-      localStorage.removeItem("points");
-      window.location.reload();
-    }
-  };
-
-  useEffect(() => {
-    const score = getScoreOfToday();
-    setPointsOfDay(score?.pointsOfDay ?? 0);
-    setTimeOfToday(score?.time ?? 0);
-  }, []);
+  const { pointsOfDay, timeOfToday, resetGame } = useHavePlayedBlocker();
 
   return (
     <>
-      <h3 className="have-played-blocker">
+      <h3 className="have-played-blocker" data-testid="dailly-blocker">
         Ya has jugado hoy! <span>Vuelve mañana</span> para volver a probar tu
         rapidez en <span>#RapidaMente</span>
       </h3>
