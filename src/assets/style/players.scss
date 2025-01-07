@@ -40,4 +40,14 @@
       }
     }
   }
+
+  @media (max-width: 767px) {
+    .logo {
+      width: 90%;
+    }
+    .players-list {
+      width: 90%;
+      margin-left: 0px;
+    }
+  }
 }

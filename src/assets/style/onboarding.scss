@@ -170,4 +170,14 @@ body {
       background-color: $green;
     }
   }
+
+  @media (max-width: 767px) {
+    width: 90%;
+  }
+}
+
+.react-responsive-modal-container {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
