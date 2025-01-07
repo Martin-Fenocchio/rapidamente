@@ -1,8 +1,11 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "src/App";
 import {
   checkVavePlayedToday,
   getMaxPointsOfDay,
+  getSumOfPoints
 } from "src/utils/points/points-utils";
 
 export const useOnboardingLogic = () => {
@@ -11,6 +14,52 @@ export const useOnboardingLogic = () => {
   const [showAnimation, setShowAnimation] = useState(false);
   const [historicalRecord, setHistoricalRecord] = useState(0);
   const [havePlayedToday, setHavePlayedToday] = useState(false);
+  const [openModalName, setOpenModalName] = useState(false);
+  const [nameController, setNameController] = useState("");
+  const [errormessage, setErrormessage] = useState("");
+  const [isSavingName, setIsSavingName] = useState(false);
+
+  const openModal = () => setOpenModalName(true);
+  const closeModal = () => setOpenModalName(false);
+
+  const checkIfThereIsUser = () => {
+    const userID = localStorage.getItem("userID");
+
+    if (!userID) openModal();
+  };
+
+  const handleOnSaveName = async () => {
+    if (!nameController) {
+      setErrormessage("Debes escribir un nombre");
+      return;
+    }
+
+    setIsSavingName(true);
+
+    try {
+      const response = await axios.post(`${API_URL}/users`, {
+        name: nameController,
+        points: getSumOfPoints()
+      });
+
+      localStorage.setItem("userID", response.data._id);
+
+      closeModal();
+    } catch (error: any) {
+      const isDuplicatedName =
+        error.response.data.message === "NAME_ALREADY_EXISTS";
+
+      if (isDuplicatedName) {
+        setErrormessage(
+          "Tu nombre ya ha sido elegido por otra persona, por favor, usa otro."
+        );
+      } else {
+        setErrormessage("Ocurrió un error, por favor, intenta más tarde.");
+      }
+    } finally {
+      setIsSavingName(false);
+    }
+  };
 
   const handleStartGame = () => {
     setShowAnimation(true);
@@ -21,6 +70,7 @@ export const useOnboardingLogic = () => {
   };
 
   useEffect(() => {
+    checkIfThereIsUser();
     setHistoricalRecord(getMaxPointsOfDay());
     setHavePlayedToday(checkVavePlayedToday());
   }, []);
@@ -30,5 +80,14 @@ export const useOnboardingLogic = () => {
     historicalRecord,
     havePlayedToday,
     handleStartGame,
+    openModal,
+    closeModal,
+    checkIfThereIsName: checkIfThereIsUser,
+    openModalName,
+    nameController,
+    setNameController,
+    handleOnSaveName,
+    isSavingName,
+    errormessage
   };
 };

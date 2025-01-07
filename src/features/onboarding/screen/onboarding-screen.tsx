@@ -5,6 +5,8 @@ import OnboardingPlayer from "../components/onboarding-player";
 import HavePlayedBlocker from "../components/have-played-blocker";
 import Marquee from "react-fast-marquee";
 import { useOnboardingLogic } from "../hooks/onboarding-hook";
+import "react-responsive-modal/styles.css";
+import ModalAskName from "../components/modal-ask-name";
 
 function OnboardingScreen() {
   const { showAnimation, historicalRecord, havePlayedToday, handleStartGame } =
@@ -30,11 +32,13 @@ function OnboardingScreen() {
               showAnimation,
               historicalRecord,
               havePlayedToday,
-              handleStartGame,
+              handleStartGame
             }}
           />
         )}
       </main>
+
+      <ModalAskName />
     </>
   );
 }

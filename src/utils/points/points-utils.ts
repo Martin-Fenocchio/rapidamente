@@ -7,7 +7,7 @@ export const savePointsOfDay = (points: number, time: number) => {
   const pointsOfDay: PointsOfDay = {
     date,
     pointsOfDay: points,
-    time,
+    time
   };
 
   const historical = getHistoricalPoints();
@@ -32,6 +32,12 @@ export const getHistoricalPoints = (): PointsOfDay[] => {
   const payload = JSON.parse(localStorage.getItem("points") ?? "[]");
 
   return payload;
+};
+
+export const getSumOfPoints = (): number => {
+  return getHistoricalPoints()
+    .map((day) => day.pointsOfDay)
+    .reduce((a, b) => a + b, 0);
 };
 
 export const getMaxPointsOfDay = () => {
