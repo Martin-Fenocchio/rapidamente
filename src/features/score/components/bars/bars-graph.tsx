@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   getHistoricalPoints,
-  getScoreOfToday,
+  getScoreOfToday
 } from "src/utils/points/points-utils";
 
 function BarsGraph() {
@@ -17,7 +17,7 @@ function BarsGraph() {
     const historicalPoints = getHistoricalPoints();
 
     let payload = historicalPoints.map(
-      (item) => (item.time ?? 1) / item.pointsOfDay
+      (item) => (item?.time ?? 1) / item.pointsOfDay
     );
 
     payload = payload.length > 10 ? payload.slice(-10) : payload;
@@ -34,11 +34,11 @@ function BarsGraph() {
     const historicalPoints = getHistoricalPoints();
 
     let payload = historicalPoints.map(
-      (item) => (item.time ?? 1) / item.pointsOfDay
+      (item) => (item?.time ?? 1) / (item.pointsOfDay ?? 1)
     );
 
     return (
-      payload.reduce((acc, item) => acc + item, 0) / payload.length
+      payload.reduce((acc, item) => acc + item, 0) / (payload?.length ?? 1)
     ).toFixed(1);
   };
 
@@ -55,8 +55,8 @@ function BarsGraph() {
       <p>
         Hoy tu velocidad fue de{" "}
         <span>
-          {(Number(location.state.time ?? 0) / todayPoints).toFixed(1)} segundos
-          por cuenta
+          {(Number(location.state?.time ?? 0) / todayPoints).toFixed(1)}{" "}
+          segundos por cuenta
         </span>
         , tu promedio es: <span>{getAverage()} segundos</span>.
       </p>
@@ -65,8 +65,8 @@ function BarsGraph() {
         series={[
           {
             data: pointsData,
-            color: "#5bc8af",
-          },
+            color: "#5bc8af"
+          }
         ]}
         width={Math.min(screenWidth, 720) - 50}
         height={300}
