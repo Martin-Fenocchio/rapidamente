@@ -174,6 +174,6 @@ export const OPERATIONS: Operation[][] = [
 ];
 
 export const getOperationsOfDay = () => {
-  const today = new Date().getDate();
+  const today = new Date().getDay();
   return OPERATIONS[today - 1];
 };
