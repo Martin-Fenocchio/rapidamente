@@ -62,7 +62,7 @@ function GameScreen() {
   };
 
   useEffect(() => {
-    setOperations(getOperationsOfDay());
+    setOperations(getOperationsOfDay() ?? []);
   }, []);
 
   const percentage = calculatePercentage(countdown);
