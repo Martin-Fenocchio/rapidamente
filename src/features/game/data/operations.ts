@@ -39,7 +39,7 @@ export const OPERATIONS: Operation[][] = [
     { operation: "12 + 14", result: 26 },
     { operation: "28 - 4", result: 24 },
     { operation: "7 + 5 + 2", result: 14 },
-    { operation: "6 x 11", result: 66 },
+    { operation: "6 x 12", result: 72 },
     { operation: "24 - 9", result: 15 },
     { operation: "40 / 8", result: 5 },
     { operation: "21 + 9 - 5", result: 25 },
