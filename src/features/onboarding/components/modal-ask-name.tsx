@@ -1,14 +1,18 @@
 import { useOnboardingLogic } from "../hooks/onboarding-hook";
 import { Modal } from "react-responsive-modal";
 
-function ModalAskName() {
+interface Props {
+  onSaveName: (name: string) => void;
+}
+
+function ModalAskName(props: Props) {
   const {
     nameController,
     setNameController,
     isSavingName,
     errormessage,
     openModalName,
-    handleOnSaveName
+    handleOnSaveName,
   } = useOnboardingLogic();
 
   return (
@@ -27,7 +31,10 @@ function ModalAskName() {
       />
       {errormessage && <p className="error">{errormessage}</p>}
 
-      <button onClick={handleOnSaveName} data-is-saving={isSavingName}>
+      <button
+        onClick={() => handleOnSaveName(props.onSaveName)}
+        data-is-saving={isSavingName}
+      >
         {isSavingName ? "Guardando..." : "Guardar"}
       </button>
     </Modal>

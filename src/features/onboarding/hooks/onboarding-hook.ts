@@ -1,11 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "src/App";
 import {
   checkVavePlayedToday,
   getMaxPointsOfDay,
-  getSumOfPoints
 } from "src/utils/points/points-utils";
 
 export const useOnboardingLogic = () => {
@@ -28,7 +25,7 @@ export const useOnboardingLogic = () => {
     if (!userID) openModal();
   };
 
-  const handleOnSaveName = async () => {
+  const handleOnSaveName = async (callback: (name: string) => void) => {
     if (!nameController) {
       setErrormessage("Debes escribir un nombre");
       return;
@@ -37,13 +34,7 @@ export const useOnboardingLogic = () => {
     setIsSavingName(true);
 
     try {
-      const response = await axios.post(`${API_URL}/users`, {
-        name: nameController,
-        points: getSumOfPoints()
-      });
-
-      localStorage.setItem("userID", response.data._id);
-
+      callback(nameController);
       closeModal();
     } catch (error: any) {
       const isDuplicatedName =
@@ -88,6 +79,6 @@ export const useOnboardingLogic = () => {
     setNameController,
     handleOnSaveName,
     isSavingName,
-    errormessage
+    errormessage,
   };
 };
