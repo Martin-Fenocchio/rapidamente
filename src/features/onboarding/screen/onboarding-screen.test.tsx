@@ -26,7 +26,7 @@ describe("Onboarding Screen", () => {
   const renderPage = () => {
     render(
       <MemoryRouter>
-        <OnboardingScreen />
+        <OnboardingScreen onSaveName={() => {}} />
       </MemoryRouter>
     );
   };
