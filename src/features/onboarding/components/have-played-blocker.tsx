@@ -3,7 +3,7 @@ import Ticket from "src/features/score/components/ticket/ticket";
 import { useHavePlayedBlocker } from "../hooks/have-played-blocker-hook";
 
 function HavePlayedBlocker() {
-  const { pointsOfDay, timeOfToday, resetGame } = useHavePlayedBlocker();
+  const { pointsOfDay, resetGame } = useHavePlayedBlocker();
 
   return (
     <>
@@ -17,7 +17,7 @@ function HavePlayedBlocker() {
       </h3>
       <Ticket points={pointsOfDay} />
 
-      <ShareResultsButton points={pointsOfDay} time={timeOfToday} />
+      <ShareResultsButton points={pointsOfDay} />
     </>
   );
 }

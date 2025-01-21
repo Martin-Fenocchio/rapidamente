@@ -3,23 +3,21 @@ import { HistoryGrid } from "../components/grid/history-grid";
 import "src/assets/style/score-screen.scss";
 import "src/assets/style/ticket.scss";
 import Ticket from "../components/ticket/ticket";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { calculateWeeks } from "src/utils/date-utils";
 import ShareResultsButton from "../components/share/share-results-button";
 import Confetti from "react-confetti";
 import BarsGraph from "../components/bars/bars-graph";
 import axios from "axios";
-import { getSumOfPoints } from "src/utils/points/points-utils";
+import { getScoreOfToday, getSumOfPoints } from "src/utils/points/points-utils";
 import StarIcon from "src/assets/images/star.svg";
 import { API_URL } from "src/App";
 
 function ScoreScreen() {
-  const location = useLocation();
   const [weeks, setWeeks] = useState<(string | null)[][]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
-
-  const points = location.state?.points ?? 0;
+  const [points, settodayPoints] = useState(0);
 
   const handleResetGame = () => {
     if (import.meta.env.DEV) {
@@ -31,18 +29,21 @@ function ScoreScreen() {
   const handleSavePoints = () => {
     axios.put(`${API_URL}/users/update-points`, {
       id: localStorage.getItem("userID"),
-      points: getSumOfPoints()
+      points: getSumOfPoints(),
     });
   };
 
   useEffect(() => {
     handleSavePoints();
     setWeeks(calculateWeeks());
+    settodayPoints(getScoreOfToday()?.pointsOfDay ?? 0);
+  }, []);
 
+  useEffect(() => {
     if (points == 10) {
       setShowConfetti(true);
     }
-  }, []);
+  }, [points]);
 
   return (
     <main className="score-screen">

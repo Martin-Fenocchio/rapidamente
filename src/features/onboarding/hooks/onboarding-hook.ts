@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   checkVavePlayedToday,
-  getMaxPointsOfDay,
+  getSumOfPoints,
 } from "src/utils/points/points-utils";
 
 export const useOnboardingLogic = () => {
@@ -62,7 +62,7 @@ export const useOnboardingLogic = () => {
 
   useEffect(() => {
     checkIfThereIsUser();
-    setHistoricalRecord(getMaxPointsOfDay());
+    setHistoricalRecord(getSumOfPoints());
     setHavePlayedToday(checkVavePlayedToday());
   }, []);
 

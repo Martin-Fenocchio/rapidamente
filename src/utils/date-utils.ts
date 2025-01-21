@@ -4,7 +4,7 @@ import { getHistoricalPoints } from "./points/points-utils";
 export function getDaysInCurrentMonth() {
   const now = new Date();
   const year = now.getFullYear();
-  const month = now.getMonth() + 1; // getMonth() returns 0-11, so add 1
+  const month = now.getMonth() + 1;
   return new Date(year, month, 0).getDate();
 }
 
@@ -12,7 +12,7 @@ export function getStartDayOfCurrentMonth() {
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
-  return new Date(year, month, 1).getDay(); // getDay() returns 0-6 (Sun-Sat)
+  return new Date(year, month, 1).getDay() - 1;
 }
 
 export const getNameOfCurrentMonth = () => {

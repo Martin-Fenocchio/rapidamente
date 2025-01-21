@@ -4,21 +4,16 @@ import { handleShareResults } from "src/utils/points/points-utils";
 
 interface Props {
   points: number;
-  time?: number;
 }
 
-function ShareResultsButton({ points, ...props }: Props) {
-  const { message, setSetMessage, location } = useShareResultsHook();
+function ShareResultsButton({ points }: Props) {
+  const { message, setSetMessage, timeOfToday } = useShareResultsHook();
 
   return (
     <>
       <button
         onClick={() =>
-          handleShareResults(
-            points,
-            location.state?.time ?? props.time ?? 0,
-            setSetMessage
-          )
+          handleShareResults(points, timeOfToday ?? 0, setSetMessage)
         }
       >
         Compartir resultados

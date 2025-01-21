@@ -7,7 +7,7 @@ interface Props {
 function OnboardingPlayer({
   showAnimation,
   handleStartGame,
-  historicalRecord
+  historicalRecord,
 }: Props) {
   return (
     <>
@@ -18,7 +18,7 @@ function OnboardingPlayer({
 
       <button onClick={handleStartGame}>Comenzar</button>
       <p className="score">
-        Tu récord: {historicalRecord} punto{historicalRecord == 1 ? "" : "s"}
+        Tu puntaje: {historicalRecord} punto{historicalRecord == 1 ? "" : "s"}
       </p>
 
       {showAnimation && (
