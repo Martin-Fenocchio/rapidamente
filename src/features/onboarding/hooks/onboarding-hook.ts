@@ -63,7 +63,7 @@ export const useOnboardingLogic = () => {
   useEffect(() => {
     checkIfThereIsUser();
     setHistoricalRecord(getSumOfPoints());
-    setHavePlayedToday(checkVavePlayedToday());
+    //setHavePlayedToday(checkVavePlayedToday());
   }, []);
 
   return {

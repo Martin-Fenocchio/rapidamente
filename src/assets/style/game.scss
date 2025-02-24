@@ -41,8 +41,10 @@
 
     > div {
       border-radius: 4px !important;
+      background-color: $orange !important;
 
       > div {
+        border-radius: 0px !important;
         background-color: #274690 !important;
       }
 
@@ -69,8 +71,10 @@
     justify-content: center;
     width: 60%;
     padding: 32px;
-    border: 1px solid rgb(238, 238, 238);
+    border: 1px solid $green;
     background-color: black;
+    border-top-left-radius: 48px;
+    border-bottom-right-radius: 48px;
 
     h2 {
       font-size: 48px;
@@ -105,7 +109,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(1, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       grid-gap: 10px;
       margin-top: 20px;
       width: 100%;
@@ -151,7 +155,8 @@
     height: 420px;
     padding: 32px;
     border: 1px solid rgb(211, 211, 211);
-    border-radius: 12px;
+    border-top-right-radius: 48px;
+    border-bottom-left-radius: 48px;
 
     font-weight: bolder;
     font-size: 24px;
@@ -163,9 +168,13 @@
     }
 
     &[data-is-correct="true"] {
-      background-color: $green;
-      border: none;
+      background-color: #5bc8af94;
+      border: 2px solid #5bc8af;
       color: white;
+
+      h3 {
+        font-size: 28px;
+      }
     }
 
     h3 {
@@ -175,7 +184,7 @@
     p {
       font-size: 14px;
       margin-top: 12px;
-      color: black;
+      color: white;
     }
   }
 

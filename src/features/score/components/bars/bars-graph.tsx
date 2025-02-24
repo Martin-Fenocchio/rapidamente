@@ -60,6 +60,8 @@ function BarsGraph() {
     handleSetInitialData();
   }, []);
 
+  if (todayVelocity == "Infinity") return <></>;
+
   return (
     <div className="char-container">
       <h3>VELOCIDAD</h3>

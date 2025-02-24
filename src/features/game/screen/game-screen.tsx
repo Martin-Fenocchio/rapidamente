@@ -54,7 +54,7 @@ function GameScreen() {
         },
         replace: true,
       });
-    }, 2000);
+    }, 2500);
   };
 
   const calculatePercentage = (countdown: number | null) => {
