@@ -2,6 +2,7 @@
 
 body {
   overflow-x: hidden;
+  background-color: black;
 }
 
 .rfm-marquee-container {
@@ -24,7 +25,8 @@ body {
 .onboarding-screen {
   @include column;
   align-items: center;
-  padding: 100px 0px;
+  padding: 0px 0px 100px;
+  position: relative;
   height: 100vh;
 
   .logo {
@@ -33,6 +35,7 @@ body {
 
   h3 {
     text-align: center;
+    color: white;
     margin-top: 80px;
     width: 65%;
 

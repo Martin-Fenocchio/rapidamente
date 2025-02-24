@@ -11,8 +11,9 @@ import {
 import { savePointsOfDay } from "src/utils/points/points-utils";
 import { setStateAsync } from "src/utils/misc/misc";
 import { calculateTime } from "src/utils/date-utils";
+import Squares from "src/components/squarredBackground/SquarredBackground";
 
-export const GAME_TIME = 2.5;
+export const GAME_TIME = 20000000.5;
 
 function GameScreen() {
   const navigate = useNavigate();
@@ -69,6 +70,15 @@ function GameScreen() {
 
   return (
     <>
+      <div className="squares-container">
+        <Squares
+          speed={0.5}
+          squareSize={30}
+          direction="diagonal"
+          borderColor="#fff"
+          hoverFillColor="#222"
+        />
+      </div>
       <div
         className="circle-animation"
         transition-style="out:circle:center"

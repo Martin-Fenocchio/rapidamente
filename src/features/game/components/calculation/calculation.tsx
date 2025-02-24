@@ -86,7 +86,11 @@ function Calculation({ timeIsOver, operation, setCountdown, ...props }: Props) {
         className="calculation"
         data-index-is-even={props.operationIndex % 2 == 0}
       >
-        <h2>{operation.operation}</h2>
+        {/* <h2>{operation.operation}</h2> */}
+        <h3>
+          10 <span className="sym">+</span> <span className="curly">(</span> 30{" "}
+          <span className="sym">x</span> 15 <span className="curly">)</span>
+        </h3>
         <h4>=</h4>
 
         {!flipped && (

@@ -7,6 +7,7 @@ import Marquee from "react-fast-marquee";
 import { useOnboardingLogic } from "../hooks/onboarding-hook";
 import "react-responsive-modal/styles.css";
 import ModalAskName from "../components/modal-ask-name";
+import Hyperspeed from "src/components/background/hyperspeedBackground";
 
 interface Props {
   onSaveName: (name: string) => void;
@@ -18,6 +19,21 @@ function OnboardingScreen(props: Props) {
 
   return (
     <>
+      <Hyperspeed
+        effectOptions={{
+          colors: {
+            roadColor: 0x080808,
+            islandColor: 0x0a0a0a,
+            background: 0x000000,
+            shoulderLines: 0xffffff,
+            brokenLines: 0xffffff,
+            leftCars: [0x274690, 0xf6af65, 0x5bc8af],
+            rightCars: [0x274690, 0xf6af65, 0x35bc8af],
+            sticks: 0x5bc8af,
+          },
+        }}
+      />
+
       <div style={{ opacity: showAnimation ? 0 : 1 }}>
         <Marquee>
           ≠ ≤ 3√a ∑ |x-y| % Π φ ∫∫≠ ≤ 3√a ∑ |x-y| % Π φ ∫∫≠ ≤ 3√a ∑ |x-y| % Π φ
