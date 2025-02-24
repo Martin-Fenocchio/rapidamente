@@ -60,14 +60,16 @@ function BarsGraph() {
     handleSetInitialData();
   }, []);
 
-  if (todayVelocity == "Infinity") return <></>;
+  const average = getAverage();
+
+  if (todayVelocity == "Infinity" || average == "NaN") return <></>;
 
   return (
     <div className="char-container">
       <h3>VELOCIDAD</h3>
       <p>
         Hoy tu velocidad fue de <span>{todayVelocity} segundos por cuenta</span>
-        , tu promedio es: <span>{getAverage()} segundos</span>.
+        , tu promedio es: <span>{average} segundos</span>.
       </p>
       <p>Tu velocidad en los últimos 10 días:</p>
       <BarChart

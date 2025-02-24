@@ -13,6 +13,7 @@ import axios from "axios";
 import { getScoreOfToday, getSumOfPoints } from "src/utils/points/points-utils";
 import StarIcon from "src/assets/images/star.svg";
 import { API_URL } from "src/App";
+import Particles from "src/components/blocks/Backgrounds/Particles/Particles";
 
 function ScoreScreen() {
   const [weeks, setWeeks] = useState<(string | null)[][]>([]);
@@ -27,16 +28,20 @@ function ScoreScreen() {
   };
 
   const handleSavePoints = () => {
-    axios.put(`${API_URL}/users/update-points`, {
-      id: localStorage.getItem("userID"),
-      points: getSumOfPoints(),
-    });
+    try {
+      axios.put(`${API_URL}/users/update-points`, {
+        id: localStorage.getItem("userID"),
+        points: getSumOfPoints(),
+      });
+    } catch (error) {
+      //
+    }
   };
 
   useEffect(() => {
-    handleSavePoints();
     setWeeks(calculateWeeks());
     settodayPoints(getScoreOfToday()?.pointsOfDay ?? 0);
+    handleSavePoints();
   }, []);
 
   useEffect(() => {
@@ -46,27 +51,38 @@ function ScoreScreen() {
   }, [points]);
 
   return (
-    <main className="score-screen">
-      {showConfetti && <Confetti />}
-      <img src={Logo} className="logo" onClick={handleResetGame} />
+    <>
+      <Particles
+        particleColors={["#5bc8af", "#f6af65"]}
+        particleCount={300}
+        particleSpread={5}
+        speed={0.1}
+        particleBaseSize={30}
+        moveParticlesOnHover={true}
+        alphaParticles={false}
+        disableRotation={false}
+      />
+      <main className="score-screen">
+        {showConfetti && <Confetti />}
+        <img src={Logo} className="logo" onClick={handleResetGame} />
+        <Ticket points={points} />
 
-      <Ticket points={points} />
+        <h4>Tu ranking mensual:</h4>
+        <HistoryGrid weeks={weeks} />
 
-      <h4>Tu ranking mensual:</h4>
-      <HistoryGrid weeks={weeks} />
+        <p className="desc-grid">
+          Volvé <span>mañana</span> para completar tu proximo cuadrado!
+        </p>
 
-      <p className="desc-grid">
-        Volvé <span>mañana</span> para completar tu proximo cuadrado!
-      </p>
+        <ShareResultsButton points={points} />
+        <Link to="/players">
+          <img src={StarIcon} />
+          Ver puntajes de jugadores
+        </Link>
 
-      <ShareResultsButton points={points} />
-      <Link to="/players">
-        <img src={StarIcon} />
-        Ver puntajes de jugadores
-      </Link>
-
-      <BarsGraph />
-    </main>
+        <BarsGraph />
+      </main>
+    </>
   );
 }
 

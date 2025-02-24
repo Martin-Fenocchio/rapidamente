@@ -87,8 +87,64 @@ body {
     justify-content: center;
   }
 
+  &:has(.share-results-buttons) {
+    padding-top: 100px;
+  }
+
+  .share-results-buttons {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 324px;
+    margin-top: 32px;
+
+    div {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      width: 100%;
+
+      button:last-of-type {
+        width: 0px;
+      }
+    }
+
+    button {
+      width: 100%;
+      margin-top: 0px;
+      padding: 0px 16px;
+      height: 56px;
+      @include center;
+      gap: 8px;
+
+      img {
+        width: 32px;
+      }
+
+      &:last-of-type {
+        padding: 0px 32px;
+        background-color: $orange;
+        color: black;
+
+        &:focus {
+          background-color: transparent;
+          border: 2px solid $orange;
+          color: white;
+
+          img {
+            filter: invert(1);
+          }
+        }
+      }
+    }
+  }
+
   @media (max-width: 767px) {
     height: unset;
+    padding-top: 100px;
 
     .logo {
       width: 90%;

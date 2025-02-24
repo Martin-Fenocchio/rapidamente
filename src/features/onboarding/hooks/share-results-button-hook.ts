@@ -4,6 +4,14 @@ import { getScoreOfToday } from "src/utils/points/points-utils";
 export const useShareResultsHook = () => {
   const [message, setSetMessage] = useState("");
   const [timeOfToday, setTimeOfToday] = useState(0);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const onCopy = () => {
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
+  };
 
   useEffect(() => {
     const score = getScoreOfToday();
@@ -17,5 +25,5 @@ export const useShareResultsHook = () => {
     button.click();
   }, [message]);
 
-  return { message, setSetMessage, timeOfToday };
+  return { message, setSetMessage, timeOfToday, isCopied, onCopy };
 };

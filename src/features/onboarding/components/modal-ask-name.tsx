@@ -19,8 +19,8 @@ function ModalAskName(props: Props) {
     <Modal open={openModalName} onClose={() => {}} center>
       <h3>Ingresa tu nombre</h3>
       <p>
-        Para guardar tus puntajes, y compararlos con otros jugadores, escribí tu
-        nombre.
+        Para guardar tus puntajes, y compararlos con otros jugadores, porfavor,
+        escribí tu nombre.
       </p>
 
       <input

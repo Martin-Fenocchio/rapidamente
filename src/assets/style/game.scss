@@ -122,22 +122,6 @@
         border: none;
         color: black;
         font-weight: bolder;
-        //border: 4px solid $blue;
-
-        transform: skewX(-10deg);
-        -o-transform: skewX(-10deg);
-        -moz-transform: skewX(-10deg);
-        -webkit-transform: skewX(-10deg);
-      }
-    }
-
-    &[data-index-is-even="true"] {
-      h2 {
-        background-color: $green;
-      }
-
-      .grid button {
-        background-color: white;
         border-bottom: 10px solid $orange;
 
         &:hover {
@@ -207,6 +191,10 @@
 
     .calculation {
       width: 90%;
+
+      h3 {
+        font-size: 32px;
+      }
     }
 
     .calculation-result {

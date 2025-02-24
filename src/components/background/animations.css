@@ -3,7 +3,7 @@
   height: 50%;
   bottom: 0;
   overflow: hidden;
-  position: absolute;
+  position: fixed;
   z-index: 0;
 }
 

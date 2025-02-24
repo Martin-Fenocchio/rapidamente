@@ -7,7 +7,7 @@ export const savePointsOfDay = (points: number, time: number) => {
   const pointsOfDay: PointsOfDay = {
     date,
     pointsOfDay: points,
-    time
+    time,
   };
 
   const historical = getHistoricalPoints();
@@ -71,6 +71,10 @@ export const handleShareResults = (
   time: number,
   setSetMessage: React.Dispatch<React.SetStateAction<string>>
 ) => {
+  setSetMessage(generateMessage(points, time));
+};
+
+export const generateMessage = (points: number, time: number) => {
   const weeks = calculateWeeks();
 
   let payload = `Puntaje del día: ${points}\n\nPuntaje de: ${getNameOfCurrentMonth()}:\n\n`;
@@ -100,6 +104,5 @@ export const handleShareResults = (
     1
   )} segundos por cuenta.\n\nJuega en https://www.martinfenocchio.com/rapidamente`;
   console.log(payload);
-
-  setSetMessage(payload);
+  return payload;
 };
