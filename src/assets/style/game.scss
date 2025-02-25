@@ -17,9 +17,10 @@
   position: fixed;
   top: 0px;
   left: 0px;
-  justify-self: anchor-center;
   z-index: 2;
   height: 100vh;
+  left: 50%;
+  transform: translateX(-50%);
 
   .countdown {
     font-size: 70px;
@@ -173,6 +174,8 @@
   }
 
   @media (max-width: 767px) {
+    left: unset;
+    transform: unset;
     padding-top: 24px;
     .logo {
       margin-bottom: 32px;
