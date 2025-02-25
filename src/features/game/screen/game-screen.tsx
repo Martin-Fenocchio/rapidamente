@@ -13,7 +13,7 @@ import { setStateAsync } from "src/utils/misc/misc";
 import { calculateTime } from "src/utils/date-utils";
 import Squares from "src/components/squarredBackground/SquarredBackground";
 
-export const GAME_TIME = 200000.5;
+export const GAME_TIME = 2.5;
 
 function GameScreen() {
   const navigate = useNavigate();
