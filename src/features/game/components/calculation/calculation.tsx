@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import ReactCardFlip from "react-card-flip";
 import { Operation } from "../../models/games-model";
-import { GAME_TIME } from "../../screen/game-screen";
-import { generateCalculationElement } from "src/utils/game/game-utils";
+import {
+  generateCalculationElement,
+  getGameTime,
+} from "src/utils/game/game-utils";
 
 interface Props {
   timeIsOver: boolean;
@@ -20,7 +22,7 @@ function Calculation({ timeIsOver, operation, setCountdown, ...props }: Props) {
   const [options, setOptions] = useState<number[]>([]);
 
   const onStartQuestion = async () => {
-    setCountdown(GAME_TIME);
+    setCountdown(getGameTime(props.operationIndex));
     clearInterval(intervalID);
 
     intervalID = setInterval(() => {

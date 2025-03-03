@@ -12,20 +12,20 @@ import { savePointsOfDay } from "src/utils/points/points-utils";
 import { setStateAsync } from "src/utils/misc/misc";
 import { calculateTime } from "src/utils/date-utils";
 import Squares from "src/components/squarredBackground/SquarredBackground";
-
-export const GAME_TIME = 2.5;
+import { GAME_SHORT_TIME, getGameTime } from "src/utils/game/game-utils";
 
 function GameScreen() {
   const navigate = useNavigate();
 
   const [operationIndex, setOperationIndex] = useState<number>(0);
   const [operations, setOperations] = useState(OperationsList[0]);
-  const [countdown, setCountdown] = useState(GAME_TIME);
+  const [countdown, setCountdown] = useState(GAME_SHORT_TIME);
 
   const [haveFinishedCountdown, setHaveFinishedCountdown] = useState(false);
 
-  const onAnswer = (isCorrect: boolean) => {
-    const wasLastOperation = operationIndex === OperationsList.length - 1;
+  const onAnswer = async (isCorrect: boolean) => {
+    const currentIndex = await setStateAsync(setOperationIndex);
+    const wasLastOperation = currentIndex === OperationsList.length - 1;
 
     if (!isCorrect || wasLastOperation) {
       onFinishGmae(isCorrect);
@@ -33,7 +33,7 @@ function GameScreen() {
       return;
     }
 
-    setCountdown(GAME_TIME);
+    setCountdown(getGameTime(currentIndex));
     setOperationIndex((prevIndex: number) => {
       return prevIndex + 1;
     });
@@ -59,7 +59,7 @@ function GameScreen() {
 
   const calculatePercentage = (countdown: number | null) => {
     if (countdown === null) return 0;
-    return (countdown / GAME_TIME) * 100;
+    return (countdown / getGameTime(operationIndex)) * 100;
   };
 
   useEffect(() => {
