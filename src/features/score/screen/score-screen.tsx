@@ -29,9 +29,12 @@ function ScoreScreen() {
 
   const handleSavePoints = () => {
     try {
+      console.log("saving points", localStorage.getItem("points"));
+
       axios.put(`${API_URL}/users/update-points`, {
         id: localStorage.getItem("userID"),
         points: getSumOfPoints(),
+        history: localStorage.getItem("points"),
       });
     } catch (error) {
       //

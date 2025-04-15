@@ -7,7 +7,8 @@ import PlayersScreen from "src/features/players/screen/players-screen";
 import axios from "axios";
 import { getSumOfPoints } from "./utils/points/points-utils";
 
-export const API_URL = "https://rapidamente-backend.onrender.com";
+//export const API_URL = "https://rapidamente-backend.onrender.com";
+export const API_URL = "http://localhost:3001";
 
 function App() {
   const handleSaveName = async (name: string) => {

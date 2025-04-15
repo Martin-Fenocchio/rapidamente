@@ -175,6 +175,7 @@ body {
   border-radius: 16px;
   background-color: $blue !important;
   color: white;
+  max-width: 500px !important;
 
   .react-responsive-modal-closeButton {
     display: none;
@@ -239,4 +240,125 @@ body {
   display: flex !important;
   align-items: center;
   justify-content: center;
+}
+
+.modal-sign-in {
+  background-color: $blue;
+  border-radius: 16px;
+  width: calc(100vw - 32px);
+  bottom: 16px;
+  left: 16px;
+  min-height: 50vh;
+  max-width: 500px;
+  right: 16px;
+  margin: 0px auto;
+  position: fixed;
+
+  padding: 16px;
+
+  h3 {
+    color: $orange;
+    text-align: center;
+    font-family: "HelveticaNeueCyr-Black";
+    margin-bottom: 32px;
+    margin-top: 16px;
+  }
+
+  p {
+    color: rgb(232, 232, 232);
+    text-align: center;
+  }
+
+  > img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%)
+      hue-rotate(133deg) brightness(106%) contrast(101%);
+    margin: 32px 0px;
+    position: absolute;
+    width: calc(100vw - 32px);
+    left: 0px;
+    z-index: 30;
+    opacity: 0.3;
+  }
+
+  button {
+    margin-top: 32px;
+    position: relative;
+    z-index: 50;
+  }
+
+  .cancel-button {
+    height: 56px;
+    border-radius: 16px;
+    background-color: transparent;
+    border: 2px solid rgb(166, 12, 12);
+    color: white;
+    font-weight: bolder;
+    background-color: rgba(166, 12, 12, 0.75);
+    width: 100%;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+  }
+}
+
+.google-button {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  width: 100%;
+  gap: 12px;
+  border-radius: 16px;
+  justify-content: center;
+
+  img {
+    width: 30px;
+  }
+}
+
+.modal-ask-name {
+  .google-button {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    gap: 12px;
+    border-radius: 16px;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    font-size: 18px;
+
+    img {
+      width: 30px;
+    }
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    margin-bottom: 16px;
+    width: 100%;
+    div {
+      background-color: $orange;
+      height: 1px;
+      width: 100%;
+    }
+  }
+
+  .option-name {
+    margin-bottom: 24px;
+  }
+
+  input {
+    height: 50px;
+    border-radius: 16px;
+    margin-top: 0px;
+  }
+
+  .save-button {
+    height: 50px;
+    border-radius: 16px;
+    width: 100%;
+    margin-top: 16px;
+  }
 }

@@ -8,14 +8,21 @@ import { useOnboardingLogic } from "../hooks/onboarding-hook";
 import "react-responsive-modal/styles.css";
 import ModalAskName from "../components/modal-ask-name";
 import Hyperspeed from "src/components/background/hyperspeedBackground";
+import ModalSignIn from "src/components/google/ModalSignIn";
 
 interface Props {
   onSaveName: (name: string) => void;
 }
 
 function OnboardingScreen(props: Props) {
-  const { showAnimation, historicalRecord, havePlayedToday, handleStartGame } =
-    useOnboardingLogic();
+  const {
+    showAnimation,
+    historicalRecord,
+    havePlayedToday,
+    handleStartGame,
+    showModalSignIn,
+    setShowModalSignIn,
+  } = useOnboardingLogic();
 
   return (
     <>
@@ -59,6 +66,9 @@ function OnboardingScreen(props: Props) {
       </main>
 
       <ModalAskName {...props} />
+      {showModalSignIn && (
+        <ModalSignIn controlVisibility={setShowModalSignIn} />
+      )}
     </>
   );
 }

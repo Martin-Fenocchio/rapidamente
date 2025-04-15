@@ -15,6 +15,7 @@ export const useOnboardingLogic = () => {
   const [nameController, setNameController] = useState("");
   const [errormessage, setErrormessage] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
+  const [showModalSignIn, setShowModalSignIn] = useState(false);
 
   const openModal = () => setOpenModalName(true);
   const closeModal = () => setOpenModalName(false);
@@ -60,10 +61,32 @@ export const useOnboardingLogic = () => {
     }, 800);
   };
 
+  const handleShowModalSignIn = () => {
+    const haveSignedIn = localStorage.getItem("GOOGLE_SIGNED_IN") == "true";
+    const userID = localStorage.getItem("userID");
+
+    if (!haveSignedIn && userID) {
+      setShowModalSignIn(true);
+    }
+  };
+
   useEffect(() => {
+    handleShowModalSignIn();
     checkIfThereIsUser();
     setHistoricalRecord(getSumOfPoints());
     setHavePlayedToday(checkVavePlayedToday());
+  }, []);
+
+  useEffect(() => {
+    const storageListener = () => {
+      setHistoricalRecord(getSumOfPoints());
+    };
+
+    window.addEventListener("pointsUpdated", storageListener);
+
+    return () => {
+      window.removeEventListener("pointsUpdated", storageListener);
+    };
   }, []);
 
   return {
@@ -80,5 +103,7 @@ export const useOnboardingLogic = () => {
     handleOnSaveName,
     isSavingName,
     errormessage,
+    showModalSignIn,
+    setShowModalSignIn,
   };
 };
