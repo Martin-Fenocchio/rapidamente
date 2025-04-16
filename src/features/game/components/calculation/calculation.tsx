@@ -14,7 +14,7 @@ interface Props {
   setCountdown: React.Dispatch<React.SetStateAction<number>>;
 }
 
-let intervalID = 0;
+let intervalID: any = 0;
 
 function Calculation({ timeIsOver, operation, setCountdown, ...props }: Props) {
   const [isFail, setIsFail] = useState(false);
