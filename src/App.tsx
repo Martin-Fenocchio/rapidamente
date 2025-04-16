@@ -7,10 +7,7 @@ import PlayersScreen from "src/features/players/screen/players-screen";
 import axios from "axios";
 import { getSumOfPoints } from "./utils/points/points-utils";
 
-//export const API_URL = "https://rapidamente-backend.onrender.com";
-export const API_URL =
-  "https://f482-2800-2364-3000-859-70b4-9a01-3630-bdca.ngrok-free.app";
-//export const API_URL = "http://localhost:3001";
+export const API_URL = "https://mog81hbjjf.execute-api.sa-east-1.amazonaws.com";
 
 function App() {
   const handleSaveName = async (name: string) => {
