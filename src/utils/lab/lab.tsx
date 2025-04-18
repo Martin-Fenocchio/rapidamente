@@ -32,7 +32,7 @@ function LablScreen() {
     console.log("userID", userID);
 
     const isValid = userID && userID.length > 0 && userID !== "undefined";
-    toast.success("Datos guardados correctamente");
+    toast.success(`Datos guardados correctamente ${isValid}`);
   };
 
   const handleSimulateWin = () => {
@@ -58,6 +58,15 @@ function LablScreen() {
 
       <br />
       <button onClick={handleCheckUserID}>Check userID</button>
+
+      <br />
+      <button
+        onClick={() => {
+          throw new Error("This is your first error!");
+        }}
+      >
+        Break the world
+      </button>
     </div>
   );
 }
