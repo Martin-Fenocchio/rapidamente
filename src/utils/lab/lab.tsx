@@ -2,8 +2,10 @@ import axios from "axios";
 import { getSumOfPoints, savePointsOfDay } from "../points/points-utils";
 import { API_URL } from "src/App";
 import toast from "react-hot-toast";
+import { useAnalytics } from "src/hooks/useAnalytics";
 
 function LablScreen() {
+  const analytics = useAnalytics();
   const handleSimulateSignup = async () => {
     const response = await axios.post(`${API_URL}/users`, {
       name: "Julio Cesar",
@@ -46,6 +48,17 @@ function LablScreen() {
     console.log("payload", payload);
   };
 
+  const handleTrackGameStart = () => {
+    analytics.trackGameStart();
+  };
+
+  const handleTrackGameEnd = () => {
+    analytics.trackGameEnd({
+      score: 5,
+      duration: 15,
+    });
+  };
+
   return (
     <div>
       <button onClick={handleSimulateSignup}>First time to user</button>
@@ -67,6 +80,12 @@ function LablScreen() {
       >
         Break the world
       </button>
+
+      <br />
+      <button onClick={handleTrackGameStart}>Track game start</button>
+
+      <br />
+      <button onClick={handleTrackGameEnd}>Track game end</button>
     </div>
   );
 }
