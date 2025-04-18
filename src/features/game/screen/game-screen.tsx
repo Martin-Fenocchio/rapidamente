@@ -13,9 +13,11 @@ import { setStateAsync } from "src/utils/misc/misc";
 import { calculateTime } from "src/utils/date-utils";
 import Squares from "src/components/squarredBackground/SquarredBackground";
 import { GAME_SHORT_TIME, getGameTime } from "src/utils/game/game-utils";
+import { useAnalytics } from "src/hooks/useAnalytics";
 
 function GameScreen() {
   const navigate = useNavigate();
+  const analytics = useAnalytics();
 
   const [operationIndex, setOperationIndex] = useState<number>(0);
   const [operations, setOperations] = useState(OperationsList[0]);
@@ -40,11 +42,25 @@ function GameScreen() {
   };
 
   const onFinishGmae = async (isCorrect: boolean) => {
-    const pointsMade =
-      (await setStateAsync(setOperationIndex)) + (isCorrect ? 1 : 0);
+    const currentIndex = await setStateAsync(setOperationIndex);
+    const pointsMade = currentIndex + (isCorrect ? 1 : 0);
     const time = calculateTime();
 
     savePointsOfDay(pointsMade, time);
+
+    const operation = operations[currentIndex];
+
+    console.log("currentIndex", currentIndex);
+    console.log("operations", operations);
+
+    console.log("operation", operation);
+
+    analytics.trackGameEnd({
+      score: pointsMade,
+      duration: time,
+      operation: operation.operation,
+      isCorrect: isCorrect,
+    });
 
     setTimeout(() => {
       navigate("/score", {

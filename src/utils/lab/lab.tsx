@@ -56,6 +56,8 @@ function LablScreen() {
     analytics.trackGameEnd({
       score: 5,
       duration: 15,
+      isCorrect: true,
+      operation: "5 + 5",
     });
   };
 

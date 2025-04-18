@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAnalytics } from "src/hooks/useAnalytics";
 import {
   checkVavePlayedToday,
   getSumOfPoints,
@@ -7,6 +8,7 @@ import {
 
 export const useOnboardingLogic = () => {
   const navigate = useNavigate();
+  const analytics = useAnalytics();
 
   const [showAnimation, setShowAnimation] = useState(false);
   const [historicalRecord, setHistoricalRecord] = useState(0);
@@ -55,6 +57,8 @@ export const useOnboardingLogic = () => {
 
   const handleStartGame = () => {
     setShowAnimation(true);
+
+    analytics.trackGameStart();
 
     setTimeout(() => {
       navigate("/game");

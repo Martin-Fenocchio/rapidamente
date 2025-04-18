@@ -2,7 +2,9 @@ import { useCallback } from "react";
 
 type GameEndData = {
   score: number;
-  duration: number; // en segundos
+  duration: number;
+  isCorrect: boolean;
+  operation: string;
 };
 
 export function useAnalytics() {
@@ -36,10 +38,12 @@ export function useAnalytics() {
   }, [sendEvent]);
 
   const trackGameEnd = useCallback(
-    ({ score, duration }: GameEndData) => {
+    ({ score, duration, isCorrect, operation }: GameEndData) => {
       sendEvent("game_end", {
         score,
         duration,
+        isCorrect,
+        operation,
         timestamp: Date.now(),
       });
     },
