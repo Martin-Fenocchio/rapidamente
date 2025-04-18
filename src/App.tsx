@@ -6,8 +6,11 @@ import ScoreScreen from "./features/score/screen/score-screen";
 import PlayersScreen from "src/features/players/screen/players-screen";
 import axios from "axios";
 import { getSumOfPoints } from "./utils/points/points-utils";
+import LablScreen from "./utils/lab/lab";
+import { Toaster } from "react-hot-toast";
 
 export const API_URL = "https://mog81hbjjf.execute-api.sa-east-1.amazonaws.com";
+//export const API_URL = "http://localhost:3001";
 
 function App() {
   const handleSaveName = async (name: string) => {
@@ -19,17 +22,21 @@ function App() {
   };
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={<OnboardingScreen onSaveName={handleSaveName} />}
-        />
-        <Route path="/game" element={<GameScreen />} />
-        <Route path="/score" element={<ScoreScreen />} />
-        <Route path="/players" element={<PlayersScreen />} />
-      </Routes>
-    </Router>
+    <>
+      <Toaster />
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={<OnboardingScreen onSaveName={handleSaveName} />}
+          />
+          <Route path="/game" element={<GameScreen />} />
+          <Route path="/score" element={<ScoreScreen />} />
+          <Route path="/players" element={<PlayersScreen />} />
+          <Route path="/lab" element={<LablScreen />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

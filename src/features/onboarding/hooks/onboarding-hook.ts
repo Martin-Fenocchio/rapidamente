@@ -23,7 +23,7 @@ export const useOnboardingLogic = () => {
   const checkIfThereIsUser = () => {
     const userID = localStorage.getItem("userID");
 
-    if (!userID) openModal();
+    if (!userID || userID == "undefined") openModal();
   };
 
   const handleOnSaveName = async (callback: (name: string) => void) => {
@@ -65,7 +65,7 @@ export const useOnboardingLogic = () => {
     const haveSignedIn = localStorage.getItem("GOOGLE_SIGNED_IN") == "true";
     const userID = localStorage.getItem("userID");
 
-    if (!haveSignedIn && userID) {
+    if (!haveSignedIn && userID && userID !== "undefined") {
       setShowModalSignIn(true);
     }
   };

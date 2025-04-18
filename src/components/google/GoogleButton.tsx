@@ -5,6 +5,7 @@ import GoogleIcon from "../../assets/images/google-icon.svg";
 import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "src/App";
+import toast from "react-hot-toast";
 
 interface Props {
   signingUp?: boolean;
@@ -33,6 +34,8 @@ export default function GoogleButton({ signingUp, onFinish }: Props) {
       }
 
       onFinish();
+
+      toast.success("Datos guardados correctamente");
       localStorage.setItem("GOOGLE_SIGNED_IN", "true");
     } catch (error) {
       console.error("Error de login:", error);
@@ -48,19 +51,18 @@ export default function GoogleButton({ signingUp, onFinish }: Props) {
       points: 0,
     });
 
-    console.log("response.data", response.data);
-
     localStorage.setItem("points", response.data.history);
     localStorage.setItem("userID", response.data._id);
-    console.log("tiggering");
 
     window.dispatchEvent(new Event("pointsUpdated"));
   };
 
   const handleLinkEmail = async (email: string) => {
+    const history = localStorage.getItem("points");
+
     const response = await axios.put(`${API_URL}/users/link-email`, {
       userId: localStorage.getItem("userID"),
-      history: localStorage.getItem("points"),
+      history: history && history != "undefined" ? history : "[]",
       email,
     });
 

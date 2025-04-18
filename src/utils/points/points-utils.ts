@@ -29,7 +29,13 @@ export const savePointsOfDay = (points: number, time: number) => {
 };
 
 export const getHistoricalPoints = (): PointsOfDay[] => {
-  const payload = JSON.parse(localStorage.getItem("points") ?? "[]");
+  const history = localStorage.getItem("points");
+
+  const payload = JSON.parse(
+    history && history != "undefined" ? history : "[]"
+  );
+
+  console.log("historical", payload);
 
   return payload;
 };
