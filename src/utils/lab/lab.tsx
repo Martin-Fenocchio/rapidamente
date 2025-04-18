@@ -14,7 +14,7 @@ function LablScreen() {
     });
 
     console.log("response.data", response.data);
-    localStorage.setItem("points", response.data.history);
+    localStorage.setItem("points", response.data.history ?? "[]");
     localStorage.setItem("userID", response.data._id);
   };
 
