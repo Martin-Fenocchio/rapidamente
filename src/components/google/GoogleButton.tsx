@@ -51,7 +51,7 @@ export default function GoogleButton({ signingUp, onFinish }: Props) {
       points: 0,
     });
 
-    localStorage.setItem("points", response.data.history);
+    localStorage.setItem("points", response.data.history ?? "[]");
     localStorage.setItem("userID", response.data._id);
 
     window.dispatchEvent(new Event("pointsUpdated"));
