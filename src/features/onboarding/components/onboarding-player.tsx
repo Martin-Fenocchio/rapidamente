@@ -1,16 +1,11 @@
-import ShinyText from "src/components/shinyText/shinyText";
-
 interface Props {
   showAnimation: boolean;
   handleStartGame: () => void;
   historicalRecord: number;
+  streak: number;
 }
 
-function OnboardingPlayer({
-  showAnimation,
-  handleStartGame,
-  historicalRecord,
-}: Props) {
+function OnboardingPlayer({ showAnimation, handleStartGame }: Props) {
   return (
     <>
       <h3 className="onboaring-player">
@@ -19,13 +14,6 @@ function OnboardingPlayer({
       </h3>
 
       <button onClick={handleStartGame}>Comenzar</button>
-      <p className="score">
-        <ShinyText
-          text={`Tu puntaje: ${historicalRecord} punto${
-            historicalRecord == 1 ? "" : "s"
-          }`}
-        />
-      </p>
 
       {showAnimation && (
         <div

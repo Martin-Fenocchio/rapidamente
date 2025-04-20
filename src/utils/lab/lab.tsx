@@ -38,10 +38,9 @@ function LablScreen() {
   };
 
   const handleSimulateWin = () => {
-    savePointsOfDay(1, 14);
     const payload = {
       id: localStorage.getItem("userID"),
-      points: getSumOfPoints(),
+      points: getSumOfPoints() + 5,
       history: localStorage.getItem("points"),
     };
 

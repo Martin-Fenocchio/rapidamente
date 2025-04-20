@@ -10,7 +10,11 @@ import ShareResultsButton from "../components/share/share-results-button";
 import Confetti from "react-confetti";
 import BarsGraph from "../components/bars/bars-graph";
 import axios from "axios";
-import { getScoreOfToday, getSumOfPoints } from "src/utils/points/points-utils";
+import {
+  getHistoricalPoints,
+  getScoreOfToday,
+  getSumOfPoints,
+} from "src/utils/points/points-utils";
 import StarIcon from "src/assets/images/star.svg";
 import { API_URL } from "src/App";
 import Particles from "src/components/blocks/Backgrounds/Particles/Particles";
@@ -29,12 +33,14 @@ function ScoreScreen() {
 
   const handleSavePoints = () => {
     try {
-      const history = localStorage.getItem("points");
+      const history = getHistoricalPoints();
+      const lastHistory = history[history.length - 1];
+      const lastPoints = lastHistory?.pointsOfDay ?? 0;
 
       axios.put(`${API_URL}/users/update-points`, {
         id: localStorage.getItem("userID"),
-        points: getSumOfPoints(),
-        history: history && history != "undefined" ? history : "[]",
+        points: getSumOfPoints() + lastPoints,
+        history: JSON.stringify(history),
       });
     } catch (error) {
       //

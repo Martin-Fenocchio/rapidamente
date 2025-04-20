@@ -35,15 +35,11 @@ export const getHistoricalPoints = (): PointsOfDay[] => {
     history && history != "undefined" ? history : "[]"
   );
 
-  console.log("historical", payload);
-
   return payload;
 };
 
 export const getSumOfPoints = (): number => {
-  return getHistoricalPoints()
-    .map((day) => day.pointsOfDay)
-    .reduce((a, b) => a + b, 0);
+  return parseInt(localStorage.getItem("userPoints") ?? "0");
 };
 
 export const getMaxPointsOfDay = () => {
@@ -60,6 +56,27 @@ export const checkVavePlayedToday = () => {
   const date = new Date().toLocaleString().split(",")[0];
 
   return historical.some((item) => item.date === date);
+};
+
+export const getDaillyStreak = (): number => {
+  const historical = getHistoricalPoints();
+
+  const currentDate = new Date().toLocaleString().split(",")[0];
+  let streak = 0;
+  let foundCurrentDay = false;
+
+  for (let i = historical.length - 1; i >= 0; i--) {
+    if (historical[i].date === currentDate) {
+      foundCurrentDay = true;
+    }
+    if (foundCurrentDay) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
 };
 
 export const getScoreOfToday = () => {

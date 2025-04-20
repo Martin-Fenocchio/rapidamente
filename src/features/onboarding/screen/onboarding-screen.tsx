@@ -9,6 +9,7 @@ import "react-responsive-modal/styles.css";
 import ModalAskName from "../components/modal-ask-name";
 import Hyperspeed from "src/components/background/hyperspeedBackground";
 import ModalSignIn from "src/components/google/ModalSignIn";
+import Podium from "src/components/podium/Podium";
 
 interface Props {
   onSaveName: (name: string) => void;
@@ -22,6 +23,7 @@ function OnboardingScreen(props: Props) {
     handleStartGame,
     showModalSignIn,
     setShowModalSignIn,
+    streak,
   } = useOnboardingLogic();
 
   return (
@@ -60,9 +62,12 @@ function OnboardingScreen(props: Props) {
               historicalRecord,
               havePlayedToday,
               handleStartGame,
+              streak,
             }}
           />
         )}
+
+        <Podium />
       </main>
 
       <ModalAskName {...props} />

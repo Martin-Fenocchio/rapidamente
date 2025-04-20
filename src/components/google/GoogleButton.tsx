@@ -53,6 +53,7 @@ export default function GoogleButton({ signingUp, onFinish }: Props) {
 
     localStorage.setItem("points", response.data.history ?? "[]");
     localStorage.setItem("userID", response.data._id);
+    localStorage.setItem("userPoints", `${response.data.points ?? 0}`);
 
     window.dispatchEvent(new Event("pointsUpdated"));
   };
@@ -67,6 +68,7 @@ export default function GoogleButton({ signingUp, onFinish }: Props) {
     });
 
     localStorage.setItem("userID", response.data._id);
+    localStorage.setItem("userPoints", `${response.data.points ?? 0}`);
   };
 
   return (

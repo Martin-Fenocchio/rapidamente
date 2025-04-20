@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAnalytics } from "src/hooks/useAnalytics";
 import {
   checkVavePlayedToday,
+  getDaillyStreak,
   getSumOfPoints,
 } from "src/utils/points/points-utils";
 
@@ -17,6 +18,7 @@ export const useOnboardingLogic = () => {
   const [nameController, setNameController] = useState("");
   const [errormessage, setErrormessage] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
+  const [streak, setStreak] = useState(0);
   const [showModalSignIn, setShowModalSignIn] = useState(false);
 
   const openModal = () => setOpenModalName(true);
@@ -79,6 +81,7 @@ export const useOnboardingLogic = () => {
     checkIfThereIsUser();
     setHistoricalRecord(getSumOfPoints());
     setHavePlayedToday(checkVavePlayedToday());
+    setStreak(getDaillyStreak());
   }, []);
 
   useEffect(() => {
@@ -109,5 +112,6 @@ export const useOnboardingLogic = () => {
     errormessage,
     showModalSignIn,
     setShowModalSignIn,
+    streak,
   };
 };
