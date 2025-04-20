@@ -57,12 +57,20 @@ body {
     cursor: pointer;
     border-radius: 8px;
     width: 50%;
-    margin-top: 50px;
-    margin-bottom: 50px;
+
     height: unset;
     padding: 12px 0px;
     color: white;
     font-weight: bolder;
+  }
+
+  .copy-button {
+    margin-bottom: 30px;
+  }
+
+  .start-button {
+    margin-top: 50px;
+    margin-bottom: 50px;
   }
 
   .score {
@@ -145,7 +153,7 @@ body {
 
   @media (max-width: 767px) {
     height: unset;
-    padding-top: 100px;
+    padding-top: 30px;
 
     .logo {
       width: 90%;
@@ -167,6 +175,15 @@ body {
       h3 {
         margin-top: 50px;
       }
+    }
+  }
+
+  @media screen and (min-width: 767px) {
+    padding-top: 130px;
+
+    h3 {
+      font-size: 15px;
+      margin-top: 20px;
     }
   }
 }
@@ -375,6 +392,11 @@ body {
   .title {
     font-size: 16px;
     text-align: center;
+  }
+
+  @media screen and (min-width: 767px) {
+    max-width: 360px;
+    padding: 0px;
   }
 }
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getSumOfPoints, savePointsOfDay } from "../points/points-utils";
+import { getSumOfPoints } from "../points/points-utils";
 import { API_URL } from "src/App";
 import toast from "react-hot-toast";
 import { useAnalytics } from "src/hooks/useAnalytics";

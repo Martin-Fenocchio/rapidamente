@@ -42,7 +42,7 @@ function ShareResultsButton({ points }: Props) {
           <div />
         </WhatsappShareButton>
       </div>
-      <button onClick={copyMessage}>
+      <button onClick={copyMessage} className="copy-button">
         <img src={CopyIcon} alt="copy" />
         {isCopied ? "Copiado!" : "Copiar resultados"}
       </button>

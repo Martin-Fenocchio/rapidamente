@@ -1,11 +1,10 @@
 interface Props {
-  showAnimation: boolean;
   handleStartGame: () => void;
   historicalRecord: number;
   streak: number;
 }
 
-function OnboardingPlayer({ showAnimation, handleStartGame }: Props) {
+function OnboardingPlayer({ handleStartGame }: Props) {
   return (
     <>
       <h3 className="onboaring-player">
@@ -13,14 +12,9 @@ function OnboardingPlayer({ showAnimation, handleStartGame }: Props) {
         <span>rápidas</span> cuentas matemáticas.{" "}
       </h3>
 
-      <button onClick={handleStartGame}>Comenzar</button>
-
-      {showAnimation && (
-        <div
-          className="circle-animation"
-          transition-style="in:circle:center"
-        ></div>
-      )}
+      <button onClick={handleStartGame} className="start-button">
+        Comenzar
+      </button>
     </>
   );
 }

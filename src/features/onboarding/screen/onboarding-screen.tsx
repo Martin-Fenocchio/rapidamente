@@ -53,12 +53,11 @@ function OnboardingScreen(props: Props) {
       <main className="onboarding-screen">
         <img src={Logo} className="logo" />
 
-        {havePlayedToday ? (
+        {false ? (
           <HavePlayedBlocker />
         ) : (
           <OnboardingPlayer
             {...{
-              showAnimation,
               historicalRecord,
               havePlayedToday,
               handleStartGame,
@@ -68,6 +67,13 @@ function OnboardingScreen(props: Props) {
         )}
 
         <Podium />
+
+        {showAnimation && (
+          <div
+            className="circle-animation"
+            transition-style="in:circle:center"
+          ></div>
+        )}
       </main>
 
       <ModalAskName {...props} />
