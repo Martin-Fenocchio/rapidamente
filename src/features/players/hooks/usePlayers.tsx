@@ -39,32 +39,39 @@ export const usePlayers = () => {
 
     for (let i = 0; i < sortedPlayers.length; i++) {
       if (sortedPlayers[i]._id === userID) {
-        morePoints = sortedPlayers[i - 1];
-        lessPoints = sortedPlayers[i + 1];
-        secondLessPoints = sortedPlayers[i + 2];
-        currentPlayer = sortedPlayers[i];
         userIndex = i + 1;
+        morePoints = {
+          ...(sortedPlayers[i - 1] ?? {}),
+          classNames: "previous",
+          index: userIndex - 1,
+        };
+
+        lessPoints = {
+          ...(sortedPlayers[i + 1] ?? {}),
+          classNames: "next",
+          index: userIndex + 1,
+        };
+        secondLessPoints = sortedPlayers[i + 2];
+        currentPlayer = {
+          ...(sortedPlayers[i] ?? {}),
+          classNames: "current",
+          index: userIndex,
+        };
         break;
       }
     }
 
+    if (!currentPlayer || currentPlayer?.points == 0) {
+      morePoints = { ...sortedPlayers[0], classNames: "current", index: 1 };
+      lessPoints = { ...currentPlayer, classNames: "next", index: userIndex };
+      currentPlayer = { ...sortedPlayers[1], classNames: "previous", index: 2 };
+    }
+
     return {
-      morePoints: {
-        ...(morePoints ?? {}),
-        classNames: "previous",
-        index: userIndex - 1,
-      },
-      lessPoints: {
-        ...(lessPoints ?? {}),
-        classNames: "next",
-        index: userIndex + 1,
-      },
-      currentPlayer: {
-        ...(currentPlayer ?? {}),
-        classNames: "current",
-        index: userIndex,
-      },
-      secondLessPoints: !morePoints
+      morePoints,
+      lessPoints,
+      currentPlayer,
+      secondLessPoints: !morePoints?._id
         ? {
             ...(secondLessPoints ?? {}),
             classNames: "previous",

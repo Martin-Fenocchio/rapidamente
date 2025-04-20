@@ -53,7 +53,7 @@ function OnboardingScreen(props: Props) {
       <main className="onboarding-screen">
         <img src={Logo} className="logo" />
 
-        {false ? (
+        {havePlayedToday ? (
           <HavePlayedBlocker />
         ) : (
           <OnboardingPlayer

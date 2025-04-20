@@ -10,7 +10,6 @@ import LablScreen from "./utils/lab/lab";
 import { Toaster } from "react-hot-toast";
 
 export const API_URL = "https://mog81hbjjf.execute-api.sa-east-1.amazonaws.com";
-//export const API_URL = "http://localhost:3001";
 
 function App() {
   const handleSaveName = async (name: string) => {
@@ -19,6 +18,8 @@ function App() {
       points: getSumOfPoints(),
     });
     localStorage.setItem("userID", response.data._id);
+    localStorage.setItem("userPoints", "0");
+    window.dispatchEvent(new Event("pointsUpdated"));
   };
 
   return (
