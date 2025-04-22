@@ -1,6 +1,7 @@
 import { usePlayers } from "src/features/players/hooks/usePlayers";
 import ShinyText from "../shinyText/shinyText";
 import { useEffect, useReducer } from "react";
+import PodiumSkeleton from "./PodiumSkeleton";
 
 function Podium() {
   const { isLoading, handleGeneratePodium } = usePlayers();
@@ -21,8 +22,6 @@ function Podium() {
     };
   }, []);
 
-  if (isLoading || !currentPlayer) return <></>;
-
   const rowComponent = (user: any) => {
     if (!user?._id) return <></>;
     return (
@@ -40,10 +39,16 @@ function Podium() {
       <h2 className="title">
         <ShinyText text="Ranking actual" />
       </h2>
-      {rowComponent(morePoints)}
-      {rowComponent(currentPlayer)}
-      {rowComponent(lessPoints)}
-      {rowComponent(secondLessPoints)}
+      {isLoading || !currentPlayer ? (
+        <PodiumSkeleton />
+      ) : (
+        <>
+          {rowComponent(morePoints)}
+          {rowComponent(currentPlayer)}
+          {rowComponent(lessPoints)}
+          {rowComponent(secondLessPoints)}
+        </>
+      )}
     </div>
   );
 }

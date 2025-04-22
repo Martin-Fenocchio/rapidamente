@@ -443,3 +443,19 @@ body {
     color: #ffa751;
   }
 }
+
+.podium-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  > div {
+    width: 100%;
+    height: 52px;
+
+    span {
+      border-radius: 1rem;
+      height: 100%;
+    }
+  }
+}
