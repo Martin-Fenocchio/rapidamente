@@ -2,6 +2,7 @@ import "src/assets/style/players.scss";
 import Logo from "src/assets/images/menterapida.svg";
 import { usePlayers } from "../hooks/usePlayers";
 import Hyperspeed from "src/components/background/hyperspeedBackground";
+import PodiumSkeleton from "src/components/podium/PodiumSkeleton";
 
 function PlayersScreen() {
   const { players, isLoading } = usePlayers();
@@ -26,27 +27,29 @@ function PlayersScreen() {
 
       <div className="players-list ranking">
         {isLoading ? (
-          <p>Cargando jugadores...</p>
+          <PodiumSkeleton amount={30} />
         ) : (
-          <article>
-            <p>Jugador</p>
-            <p>Puntos</p>
-          </article>
-        )}
-        {players.map((player, index) => {
-          return (
-            <article
-              className={`ranking-row ${index === 0 && "current"} ${
-                index == 1 && "next"
-              }`}
-            >
-              <p className="position">
-                {index + 1}°{"  "} {player.name}
-              </p>
-              <p className="points">{player.points}</p>
+          <>
+            <article>
+              <p>Jugador</p>
+              <p>Puntos</p>
             </article>
-          );
-        })}
+            {players.map((player, index) => {
+              return (
+                <article
+                  className={`ranking-row ${index === 0 && "current"} ${
+                    index == 1 && "next"
+                  }`}
+                >
+                  <p className="position">
+                    {index + 1}°{"  "} {player.name}
+                  </p>
+                  <p className="points">{player.points}</p>
+                </article>
+              );
+            })}
+          </>
+        )}
       </div>
     </main>
   );
