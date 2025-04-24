@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAnalytics } from "src/hooks/useAnalytics";
 import {
   checkVavePlayedToday,
-  getDaillyStreak,
   getSumOfPoints,
 } from "src/utils/points/points-utils";
+import { getStreak } from "src/utils/streak/streak";
 
 export const useOnboardingLogic = () => {
   const navigate = useNavigate();
@@ -81,7 +81,7 @@ export const useOnboardingLogic = () => {
     checkIfThereIsUser();
     setHistoricalRecord(getSumOfPoints());
     setHavePlayedToday(checkVavePlayedToday());
-    setStreak(getDaillyStreak());
+    setStreak(getStreak());
   }, []);
 
   useEffect(() => {

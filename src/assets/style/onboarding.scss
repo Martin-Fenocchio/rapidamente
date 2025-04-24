@@ -90,6 +90,7 @@ body {
 
   .ticket {
     margin-top: 32px;
+    margin-bottom: 18px;
   }
 
   &:has(.onboaring-player) {
@@ -108,7 +109,7 @@ body {
     gap: 16px;
     width: 100%;
     max-width: 324px;
-    margin-top: 32px;
+    margin-top: 18px;
 
     div {
       display: flex;

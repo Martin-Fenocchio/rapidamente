@@ -1,7 +1,6 @@
 interface Props {
   handleStartGame: () => void;
   historicalRecord: number;
-  streak: number;
 }
 
 function OnboardingPlayer({ handleStartGame }: Props) {

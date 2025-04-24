@@ -58,27 +58,6 @@ export const checkVavePlayedToday = () => {
   return historical.some((item) => item.date === date);
 };
 
-export const getDaillyStreak = (): number => {
-  const historical = getHistoricalPoints();
-
-  const currentDate = new Date().toLocaleString().split(",")[0];
-  let streak = 0;
-  let foundCurrentDay = false;
-
-  for (let i = historical.length - 1; i >= 0; i--) {
-    if (historical[i].date === currentDate) {
-      foundCurrentDay = true;
-    }
-    if (foundCurrentDay) {
-      streak++;
-    } else {
-      break;
-    }
-  }
-
-  return streak;
-};
-
 export const getScoreOfToday = () => {
   const historical = getHistoricalPoints();
 

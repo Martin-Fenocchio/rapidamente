@@ -23,7 +23,6 @@ function OnboardingScreen(props: Props) {
     handleStartGame,
     showModalSignIn,
     setShowModalSignIn,
-    streak,
   } = useOnboardingLogic();
 
   return (
@@ -61,7 +60,6 @@ function OnboardingScreen(props: Props) {
               historicalRecord,
               havePlayedToday,
               handleStartGame,
-              streak,
             }}
           />
         )}

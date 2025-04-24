@@ -18,11 +18,14 @@ import {
 import StarIcon from "src/assets/images/star.svg";
 import { API_URL } from "src/App";
 import Particles from "src/components/blocks/Backgrounds/Particles/Particles";
+import ShinyText from "src/components/shinyText/shinyText";
+import { getStreak } from "src/utils/streak/streak";
 
 function ScoreScreen() {
   const [weeks, setWeeks] = useState<(string | null)[][]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [points, settodayPoints] = useState(0);
+  const [streak, setStreak] = useState(0);
 
   const handleResetGame = () => {
     if (import.meta.env.DEV) {
@@ -50,6 +53,7 @@ function ScoreScreen() {
   useEffect(() => {
     setWeeks(calculateWeeks());
     settodayPoints(getScoreOfToday()?.pointsOfDay ?? 0);
+    setStreak(getStreak());
     handleSavePoints();
   }, []);
 
@@ -78,6 +82,8 @@ function ScoreScreen() {
 
         <h4>Tu ranking mensual:</h4>
         <HistoryGrid weeks={weeks} />
+
+        <ShinyText text={`Racha diaría: ${streak} 🔥`} />
 
         <p className="desc-grid">
           Volvé <span>mañana</span> para completar tu proximo cuadrado!
