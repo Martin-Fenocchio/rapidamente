@@ -24,7 +24,7 @@ function ModalAskName(props: Props) {
       classNames={{ modal: "modal-ask-name" }}
       center
     >
-      <h3>Ingresa tu nombre</h3>
+      <h3>Inicia sesion</h3>
       <p>
         Para guardar tus puntajes, y compararlos con otros jugadores, puedes
         inicia sesión con Google.
