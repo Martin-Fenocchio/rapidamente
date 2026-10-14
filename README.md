@@ -25,10 +25,11 @@ Named guest play works without Google credentials. Configure Google OAuth later 
 | `npm start` | Run the production build |
 | `npm run lint` | ESLint; no automatic file edits |
 | `npm run typecheck` | TypeScript validation |
-| `npm test` | Unit, component, and mocked API contract tests |
+| `npm test` | Unit/component and pure domain tests |
 | `npm run test:integration` | Real MongoDB and Better Auth integration tests |
 | `npm run test:watch` | Watch unit/component tests |
-| `npm run test:e2e` | Playwright desktop/mobile suite; build first |
+| `npm run test:e2e` | Playwright desktop/mobile UI fixtures; build first |
+| `npm run test:e2e:api` | Real browser/API/database journeys; build first |
 | `npm run check` | Lint, typecheck, tests, production build |
 
 For browser tests, install Chromium once with `npx playwright install chromium`. CI installs browser system dependencies too.

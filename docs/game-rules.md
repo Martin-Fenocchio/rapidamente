@@ -4,7 +4,7 @@ The browser chooses ten questions by local weekday (`Date.getDay()`), using the 
 
 The opening countdown lasts four seconds. Questions 1–4 allow 2.5 seconds each; questions 5–10 allow 4 seconds. The migrated timer uses a monotonic deadline with 50 ms updates, rejects answers received at or after the deadline, and cancels on answer/unmount. Background-tab scheduling can delay the feedback callback but cannot make a late answer valid. A run produces one completion and navigates to results after 2.5 seconds of feedback.
 
-Daily history retains the first attempt for each date, including a zero-point attempt. Home blocks another attempt today; direct `/game` navigation also redirects to results if the current local history already contains today. These are browser rules, not server-enforced anti-cheat protections.
+Daily history retains the first attempt for each date, including a zero-point attempt. Home blocks another attempt today; direct `/game` navigation also redirects to results if the current local history already contains today. The server also retains only the first result for each player and canonical Buenos Aires date. New history carries `isoDate` so locale formatting does not break restoration. Client IDs and accumulated totals are rejected. Individual answers are still evaluated in the browser; bounded daily scores do not provide comprehensive anti-cheat protection.
 
 ## Corrections in the migration
 
@@ -15,4 +15,4 @@ Daily history retains the first attempt for each date, including a zero-point at
 - Choice generation uses a finite pool instead of an unbounded random loop.
 - Results refresh does not submit a score again after a successful save.
 
-Existing historical scores are not recalculated. Date locale assumptions, Monday calendar offsets on Sundays, zero-score share/speed formatting, challenge uniqueness, ranking resets, and cross-device daily limits remain follow-up game refactor work. Changing these requires a documented rule and regression tests.
+Existing historical scores are not recalculated. Ambiguous legacy dates, Monday calendar offsets on Sundays, zero-score share/speed formatting, challenge uniqueness, ranking resets, and server-side answer validation remain follow-up game refactor work. Changing these requires a documented rule and regression tests.

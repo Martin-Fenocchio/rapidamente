@@ -36,7 +36,7 @@ Prefer behavior assertions over implementation snapshots or tests that duplicate
 
 ## CI and release checks
 
-The migration must establish CI jobs for lint, type checking, unit/component tests, API integration tests, a production build, and critical Playwright journeys. Configure these as required checks where repository settings permit. Commands below describe the target interface; unit/component and browser checks are implemented in this milestone. Real database integration tests remain pending:
+The migration must establish CI jobs for lint, type checking, unit/component tests, API integration tests, a production build, and critical Playwright journeys. Configure these as required checks where repository settings permit. All test layers below are implemented. Both browser suites exercise a production build:
 
 ```text
 npm run lint
@@ -45,11 +45,12 @@ npm run test
 npm run test:integration
 npm run build
 npm run test:e2e
+npm run test:e2e:api
 ```
 
 Playwright release checks should exercise a production build. Begin with Chromium and mobile viewport coverage; add WebKit/Firefox coverage for the supported browser matrix. A release must not proceed with unexplained failing required checks.
 
-The frontend now has lint, typecheck, Vitest, production build, and Playwright commands plus a CI workflow. The workflow has not yet run remotely and branch-protection requirements are not configured. Real database integration gates will be added with backend integration.
+GitHub Actions runs lint, typecheck, unit/component tests, isolated MongoDB/Better Auth tests, a production build, and both Playwright suites. Remote runs are reviewed after milestone pushes. Branch-protection requirements are not yet configured.
 
 ## Documentation system
 
@@ -83,6 +84,6 @@ Verified on 2026-10-14 by fetching the public HTML and deployed JavaScript:
 - Frontend: https://martin-fenocchio.github.io/rapidamente/ (GitHub Pages).
 - The deployed bundle calls `https://mog81hbjjf.execute-api.sa-east-1.amazonaws.com` (AWS API Gateway, São Paulo region).
 - The API root responded with `Hello World!`.
-- Local frontend scripts publish the built `dist` directory using `gh-pages`.
-- AWS CLI confirmed the API integrates with Lambda `rapidamente`, running `nodejs22.x` with handler `dist/index.handler`. Its `DATA_BASE` value was saved only in the ignored backend `.env`. Database connectivity and the active backend commit have not been inspected.
+- Historical frontend scripts published `dist` using `gh-pages`; the migrated repository now builds Next.js.
+- AWS CLI confirmed the API integrates with Lambda `rapidamente`, running `nodejs22.x` with handler `dist/index.handler`. Its `DATA_BASE` value was saved only in the ignored backend `.env`. The active backend commit has not been inspected. A separate empty preview database was subsequently created without reading source player records.
 - Agreed target: one Next.js application deployed on Vercel.

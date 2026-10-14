@@ -33,3 +33,9 @@ Six browser journeys pass through the actual Next.js API, real Better Auth cooki
 Real browser checks found and fixed the unavailable-Google prompt and a canvas that intercepted logout clicks. These checks are now included in CI alongside the 16 fixture-based UI journeys. Google OAuth itself still requires the user-supplied credentials and a staging test account.
 
 Preview origin configuration is tested separately: explicit canonical URLs take precedence, exact branch/deployment hosts are trusted, and missing or short signing secrets fail closed. CI uses one browser worker because concurrent animated screens overloaded the runner in the previous milestone.
+
+## Milestone 5: Protected Vercel preview
+
+The personal Hobby project `personal-385b/rapidamente` now hosts the combined application. Preview credentials were explicitly approved and configured; the separate database began empty. Twelve hosted cookie/API/persistence checks passed with one synthetic player. Sensitive configuration and build/test artifacts are excluded from uploads. Deployment, Google setup, returning-player limitations, backup gates, write coordination, and rollback are documented in `deployment.md`.
+
+Google OAuth remains deferred, Vercel GitHub repository permission is pending, and source player backup/copy has not been approved. These are production release gates; no live traffic was switched.
