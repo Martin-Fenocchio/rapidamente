@@ -1,17 +1,20 @@
-# Temporary API bridge
+# Integrated API
 
-`src/app/api/legacy/[...path]/route.ts` uses the Next.js Node.js runtime. It is a temporary transport for the existing NestJS backend; domain services have not moved yet.
+All handlers run in Next.js. MongoDB and Better Auth are server-only; the legacy AWS bridge has been removed.
 
-| Browser endpoint | Method | Upstream endpoint |
+| Endpoint | Method | Access and behavior |
 | --- | --- | --- |
-| `/api/legacy/users` | GET | `/users` |
-| `/api/legacy/users` | POST | `/users` |
-| `/api/legacy/users/update-points` | PUT | `/users/update-points` |
-| `/api/legacy/users/link-email` | PUT | `/users/link-email` |
-| `/api/legacy/users/email/:email` | GET | `/users/email/:email` |
+| `/api/players` | GET | Public ranking: `_id`, `name`, `points`; excludes emails/history and retired guests |
+| `/api/players` | POST | Session required; `{ name }` resolves/creates this session's player at zero points |
+| `/api/me` | GET | Session required; own player ID, name, points, history, anonymous status |
+| `/api/results` | POST | Session + exact trusted Origin required; `{ date, pointsOfDay, time }` |
+| `/api/config` | GET | Public Google-provider availability and current challenge date |
+| `/api/auth/*` | GET/POST | Better Auth session, guest sign-in, Google OAuth, logout endpoints |
 
-Only these method/path combinations are accepted. Upstream URL comes exclusively from server-only `LEGACY_API_URL`; no query or client header can select it. Requests have a 10-second timeout and reject upstream redirects. Responses preserve upstream status/body/content type and use `Cache-Control: no-store`. Requests never forward browser cookies or authorization headers. Unsupported paths return 404, missing upstream configuration returns 503 (`LEGACY_API_NOT_CONFIGURED`), and network failures return 502 (`LEGACY_API_UNAVAILABLE`).
+Mutations reject client-provided target IDs, accumulated totals, emails, and extra fields. Results are bounded to integers 0–10, duration 0–300 seconds, and today's canonical Buenos Aires date. The server increments totals transactionally once per player/day. Existing historical totals are preserved. Retries return the recorded result rather than adding points again; existing known daily history also prevents replay of a legacy score.
 
-Legacy payloads remain `{ name, points, email? }`, `{ id, points, history? }`, and `{ userId, email, history? }`. History is serialized JSON. The old backend accepts client-supplied identity and total scores. This bridge is not the final authenticated API; do not treat it as a completed Better Auth migration.
+Private data is selected from a validated server session, never a browser-storage ID. New Google sessions map verified emails to existing players only when there is one unambiguous match. Conflicts return `ACCOUNT_LINK_CONFLICT` (409); no guessing or automatic combination of duplicate legacy email records. Old `/users/email`, `/link-email`, and `/update-points` endpoints are not exposed in Next.js.
 
-The next stage will introduce verified sessions, input validation, protected mutations, private/public response shapes, and database integration tests. Keep legacy compatibility and intentional contract changes separately documented.
+Errors are JSON `{ message }`: invalid input 400, missing/expired identity 401, bad origin 403, missing player 404, linking/date conflict 409, and missing configuration or service failure 503. Driver errors and credential values are not included in responses. API responses use `Cache-Control: no-store`.
+
+Scores are still bounded browser-reported daily results; individual answer/timing validation is part of the later game-engine refactor. Authentication protects ownership and the total calculation, not every possible cheating strategy.

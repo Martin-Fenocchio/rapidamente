@@ -27,8 +27,4 @@ export function mergeHistory(existing: string | undefined, incoming: HistoryEntr
   return JSON.stringify(records);
 }
 
-export function challengeDate(now = new Date()) {
-  const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/Argentina/Buenos_Aires", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(now);
-  const part = (type: string) => parts.find(item => item.type === type)!.value;
-  return `${part("year")}-${part("month")}-${part("day")}`;
-}
+export { challengeDate } from "src/shared/game-date";

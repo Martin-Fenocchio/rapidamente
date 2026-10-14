@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { isFirebaseConfigured } from "src/utils/firebase/firebase";
+
 import { useAnalytics } from "src/hooks/useAnalytics";
 import {
   checkVavePlayedToday,
@@ -79,7 +79,7 @@ export const useOnboardingLogic = () => {
     const haveSignedIn = localStorage.getItem("GOOGLE_SIGNED_IN") == "true";
     const userID = localStorage.getItem("userID");
 
-    if (isFirebaseConfigured && !haveSignedIn && userID && userID !== "undefined") {
+    if (!haveSignedIn && userID && userID !== "undefined") {
       setShowModalSignIn(true);
     }
   };
@@ -97,10 +97,18 @@ export const useOnboardingLogic = () => {
       setHistoricalRecord(getSumOfPoints());
     };
 
+    const sessionListener = () => {
+      const id = localStorage.getItem("userID");
+      setOpenModalName(!id || id === "undefined");
+      setHavePlayedToday(checkVavePlayedToday());
+      handleShowModalSignIn();
+    };
+    window.addEventListener("sessionUpdated", sessionListener);
     window.addEventListener("pointsUpdated", storageListener);
 
     return () => {
       window.removeEventListener("pointsUpdated", storageListener);
+      window.removeEventListener("sessionUpdated", sessionListener);
     };
   }, []);
 

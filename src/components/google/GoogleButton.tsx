@@ -1,84 +1,26 @@
-// src/components/LoginButton.tsx
-import { signInWithPopup } from "firebase/auth";
-import { getFirebaseAuth, isFirebaseConfigured } from "src/utils/firebase/firebase";
-import { assetUrl } from "src/lib/assets";
-const GoogleIcon = assetUrl("google-icon.svg");
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { authClient } from "src/lib/auth-client";
 import { API_URL } from "src/lib/api";
+import { assetUrl } from "src/lib/assets";
 import toast from "react-hot-toast";
 
-interface Props {
-  signingUp?: boolean;
-  onFinish: () => void;
-}
-
-export default function GoogleButton({ signingUp, onFinish }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleLogin = async () => {
+interface Props { signingUp?: boolean; onFinish: () => void }
+export default function GoogleButton({ onFinish }: Props) {
+  const [enabled, setEnabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    fetch(`${API_URL}/config`).then(response => response.json()).then(config => setEnabled(config.googleSignInEnabled === true)).catch(() => {});
+  }, []);
+  const login = async () => {
+    setLoading(true);
     try {
-      const { auth, provider } = getFirebaseAuth();
-      const result = await signInWithPopup(auth, provider);
-      const email = result.user.email;
-
-      if (!email) return;
-
-      setIsLoading(true);
-
-      if (signingUp) {
-        await handleCreateUser(
-          email,
-          result.user.displayName || email.split("@")[0]
-        );
-      } else {
-        await handleLinkEmail(result.user.email!);
-      }
-
+      const result = await authClient.signIn.social({ provider: "google", callbackURL: `${window.location.origin}${process.env.NEXT_PUBLIC_BASE_PATH || ""}/` });
+      if (result.error) throw new Error(result.error.message);
       onFinish();
-
-      toast.success("Datos guardados correctamente");
-      localStorage.setItem("GOOGLE_SIGNED_IN", "true");
-    } catch (error) {
-      console.error("Error de login:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    } catch { toast.error("No se pudo iniciar sesión con Google."); setLoading(false); }
   };
-
-  const handleCreateUser = async (email: string, name: string) => {
-    const response = await axios.post(`${API_URL}/users`, {
-      name,
-      email,
-      points: 0,
-    });
-
-    localStorage.setItem("points", response.data.history ?? "[]");
-    localStorage.setItem("userID", response.data._id);
-    localStorage.setItem("userPoints", `${response.data.points ?? 0}`);
-
-    window.dispatchEvent(new Event("pointsUpdated"));
-  };
-
-  const handleLinkEmail = async (email: string) => {
-    const history = localStorage.getItem("points");
-
-    const response = await axios.put(`${API_URL}/users/link-email`, {
-      userId: localStorage.getItem("userID"),
-      history: history && history != "undefined" ? history : "[]",
-      email,
-    });
-
-    localStorage.setItem("userID", response.data._id);
-    localStorage.setItem("userPoints", `${response.data.points ?? 0}`);
-  };
-
-  if (!isFirebaseConfigured) return null;
-
-  return (
-    <button onClick={handleLogin} className="google-button">
-      <img src={GoogleIcon} alt="" />
-      {isLoading ? "Procesando datos" : "Iniciar sesión"}
-    </button>
-  );
+  if (!enabled) return <p>El inicio de sesión con Google estará disponible próximamente.</p>;
+  return <button className="google-button" onClick={login} disabled={loading}>
+    <img src={assetUrl("google-icon.svg")} alt="" />{loading ? "Conectando…" : "Iniciar sesión"}
+  </button>;
 }

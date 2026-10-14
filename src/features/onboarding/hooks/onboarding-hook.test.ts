@@ -4,7 +4,6 @@ import { useOnboardingLogic } from "./onboarding-hook";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), replace: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => router }));
-vi.mock("src/utils/firebase/firebase", () => ({ isFirebaseConfigured: false }));
 
 describe("onboarding interactions", () => {
   afterEach(() => vi.useRealTimers());

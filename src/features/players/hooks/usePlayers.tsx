@@ -15,7 +15,7 @@ export const usePlayers = () => {
     try {
       const userID = localStorage.getItem("userID");
 
-      const response = await axios.get(`${API_URL}/users`);
+      const response = await axios.get(`${API_URL}/players`);
       const payload: IPlayer[] = response.data;
 
       setPlayers(payload);

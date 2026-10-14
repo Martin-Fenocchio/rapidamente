@@ -36,3 +36,7 @@ out/
 !.env.example
 playwright-report/
 test-results/
+.vercel
+
+# Private migration backups and environment material
+.migration-private/

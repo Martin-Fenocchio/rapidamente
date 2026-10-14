@@ -84,3 +84,31 @@ describe("real MongoDB player persistence", () => {
     expect(await database.db.collection("dailyResults").countDocuments()).toBe(0);
   });
 });
+
+describe("guest linking and legacy preservation", () => {
+  it("moves guest results into the verified player without changing the original ID", async () => {
+    const source = await service.resolve(guest);
+    await service.saveResult(guest.id, result, now);
+    const target = await service.resolve(google);
+    await service.linkGuest(guest.id, google.id);
+    expect((await service.current(google.id)).points).toBe(4);
+    expect((await service.current(google.id))._id).toBe(target._id);
+    expect((await service.leaderboard()).map(player => player._id)).not.toContain(source._id);
+    await service.linkGuest(guest.id, google.id);
+    expect((await service.current(google.id)).points).toBe(4);
+    await expect(service.saveResult(guest.id, result, now)).rejects.toMatchObject({ code: "PLAYER_NOT_FOUND" });
+  });
+  it("keeps an existing target attempt when a guest already played the same day", async () => {
+    await service.resolve(guest);
+    await service.saveResult(guest.id, result, now);
+    await service.resolve(google);
+    await service.saveResult(google.id, { ...result, pointsOfDay: 2 }, now);
+    await service.linkGuest(guest.id, google.id);
+    expect((await service.current(google.id)).points).toBe(2);
+  });
+  it("does not add today's legacy score again after verified recovery", async () => {
+    await database.db.collection("users").insertOne({ name: "Legacy", email: google.email, points: 80, history: JSON.stringify([{ date: "10/14/2026", pointsOfDay: 8 }]) });
+    await service.resolve(google);
+    expect((await service.saveResult(google.id, result, now))!.points).toBe(80);
+  });
+});

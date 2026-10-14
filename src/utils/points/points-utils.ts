@@ -1,3 +1,4 @@
+import { challengeDate } from "src/shared/game-date";
 import { PointsOfDay } from "src/features/game/models/games-model";
 import { calculateWeeks, getNameOfCurrentMonth } from "../date-utils";
 
@@ -6,6 +7,7 @@ export const savePointsOfDay = (points: number, time: number) => {
 
   const pointsOfDay: PointsOfDay = {
     date,
+    isoDate: challengeDate(),
     pointsOfDay: points,
     time,
   };
@@ -55,7 +57,7 @@ export const checkVavePlayedToday = () => {
 
   const date = new Date().toLocaleString().split(",")[0];
 
-  return historical.some((item) => item.date === date);
+  return historical.some((item) => item.isoDate ? item.isoDate === challengeDate() : item.date === date);
 };
 
 export const getScoreOfToday = () => {
@@ -63,7 +65,7 @@ export const getScoreOfToday = () => {
 
   const date = new Date().toLocaleString().split(",")[0];
 
-  const today = historical.find((item) => item.date === date);
+  const today = historical.find((item) => item.isoDate ? item.isoDate === challengeDate() : item.date === date);
 
   return today;
 };

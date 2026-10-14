@@ -9,6 +9,7 @@ import { useOnboardingLogic } from "../hooks/onboarding-hook";
 import "react-responsive-modal/styles.css";
 import ModalAskName from "../components/modal-ask-name";
 import Hyperspeed from "src/components/background/hyperspeedBackground";
+import AccountControls from "src/components/account-controls";
 import ModalSignIn from "src/components/google/ModalSignIn";
 import Podium from "src/components/podium/Podium";
 
@@ -75,6 +76,7 @@ function OnboardingScreen(props: Props) {
         )}
       </main>
 
+      <AccountControls />
       <ModalAskName {...props} />
       {showModalSignIn && (
         <ModalSignIn controlVisibility={setShowModalSignIn} />

@@ -59,7 +59,8 @@ export const calculateWeeks = () => {
           .toLocaleString()
           .split(",")[0];
 
-        const hasPoints = history.find((record) => record.date === dateStr);
+        const isoDate = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const hasPoints = history.find((record) => record.isoDate ? record.isoDate === isoDate : record.date === dateStr);
         const isRecordPoints = hasPoints?.pointsOfDay == 10;
 
         week.push(

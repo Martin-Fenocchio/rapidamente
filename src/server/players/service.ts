@@ -3,7 +3,7 @@ import { MongoClient, Db, ObjectId } from "mongodb";
 import { z } from "zod";
 import { randomInt } from "node:crypto";
 import { AppError } from "../http/errors";
-import { challengeDate, historyEntry, mergeHistory } from "./history";
+import { challengeDate, historyEntry, mergeHistory, readLegacyHistory } from "./history";
 
 export interface Player {
   _id: ObjectId;
@@ -40,6 +40,7 @@ export function playerService(db: Db, client: MongoClient) {
     },
     async resolve(identity: Identity, requestedName?: string) {
       const bound = await players.findOne({ authUserId: identity.id });
+      if (bound?.retiredInto) throw new AppError("ACCOUNT_ALREADY_LINKED", 409);
       if (bound) return privatePlayer(bound);
       if (!identity.isAnonymous && identity.emailVerified && identity.email) {
         const escaped = identity.email.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -67,8 +68,34 @@ export function playerService(db: Db, client: MongoClient) {
       }
       return privatePlayer(player);
     },
+    async linkGuest(guestAuthId: string, targetAuthId: string) {
+      if (guestAuthId === targetAuthId) return;
+      const session = client.startSession();
+      try {
+        await session.withTransaction(async () => {
+          const source = await players.findOne({ authUserId: guestAuthId }, { session });
+          const target = await players.findOne({ authUserId: targetAuthId }, { session });
+          if (!source || !target || source.retiredInto) return;
+          const sourceResults = await results.find({ playerId: source._id }, { session }).toArray();
+          let earned = 0;
+          const accepted = [];
+          for (const result of sourceResults) {
+            const day = new Date(`${result.date}T12:00:00-03:00`).toLocaleDateString("en-US", { timeZone: "America/Argentina/Buenos_Aires" });
+            const exists = await results.findOne({ playerId: target._id, date: result.date }, { session });
+            const legacyExists = readLegacyHistory(target.history).some(record => record.isoDate === result.date || record.date === day);
+            if (!exists && !legacyExists) {
+              await results.updateOne({ _id: result._id }, { $set: { playerId: target._id } }, { session });
+              earned += result.pointsOfDay;
+              accepted.push({ date: day, isoDate: result.date, pointsOfDay: result.pointsOfDay, time: result.time });
+            }
+          }
+          await players.updateOne({ _id: target._id }, { $inc: { points: earned }, $set: { history: mergeHistory(target.history, accepted) } }, { session });
+          await players.updateOne({ _id: source._id }, { $set: { retiredInto: target._id } }, { session });
+        });
+      } finally { await session.endSession(); }
+    },
     async current(authUserId: string) {
-      const player = await players.findOne({ authUserId });
+      const player = await players.findOne({ authUserId, retiredInto: { $exists: false } });
       if (!player) throw new AppError("PLAYER_NOT_FOUND", 404);
       return privatePlayer(player);
     },
@@ -78,12 +105,13 @@ export function playerService(db: Db, client: MongoClient) {
       const session = client.startSession();
       try {
         return await session.withTransaction(async () => {
-          const player = await players.findOne({ authUserId }, { session });
+          const player = await players.findOne({ authUserId, retiredInto: { $exists: false } }, { session });
           if (!player) throw new AppError("PLAYER_NOT_FOUND", 404);
+          const day = new Date(`${input.date}T12:00:00-03:00`).toLocaleDateString("en-US", { timeZone: "America/Argentina/Buenos_Aires" });
+          if (readLegacyHistory(player.history).some(record => record.isoDate === input.date || record.date === day)) return { ...privatePlayer(player), alreadySaved: true };
           const prior = await results.findOne({ playerId: player._id, date: input.date }, { session });
           if (prior) return { ...privatePlayer(player), alreadySaved: true };
           await results.insertOne({ playerId: player._id, ...input }, { session });
-          const day = new Date(`${input.date}T12:00:00-03:00`).toLocaleDateString("en-US", { timeZone: "America/Argentina/Buenos_Aires" });
           const history = mergeHistory(player.history, [historyEntry.parse({ date: day, isoDate: input.date, pointsOfDay: input.pointsOfDay, time: input.time })]);
           const updated = await players.findOneAndUpdate({ _id: player._id }, { $inc: { points: input.pointsOfDay }, $set: { history } }, { session, returnDocument: "after" });
           return { ...privatePlayer(updated!), alreadySaved: false };

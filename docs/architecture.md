@@ -1,6 +1,6 @@
 # Application architecture
 
-## Current migration milestone
+## Integrated application
 
 Next.js App Router owns `/`, `/game`, `/score`, and `/players`. `/lab` exposes the old experimental tools only in development; production displays an unavailable message. `src/app/layout.tsx` supplies Spanish metadata, global styles, local font assets, optional analytics, and shared providers. Vite remains only as a Vitest dependency; React Router and GitHub Pages deployment scripts were removed.
 
@@ -10,15 +10,15 @@ The page files dynamically load existing feature screens with SSR disabled. This
 
 ## Backend boundary
 
-Browser code calls the same-origin `/api/legacy` bridge. The server reads `LEGACY_API_URL` and forwards only the supported legacy user endpoints. Empty configuration makes upstream access unavailable. This avoids cross-origin browser configuration and accidental production calls during local work. It does not replace the NestJS business logic or repair its identity contract.
+Browser code calls same-origin `/api/players`, `/api/me`, `/api/results`, and `/api/auth`. Next.js Route Handlers validate requests and call server-only MongoDB services. The AWS transport bridge and Firebase dependency are removed. MongoDB credentials and the Better Auth signing secret never enter browser bundles.
 
-No MongoDB code or database credentials are bundled into this UI milestone. Better Auth and MongoDB services will move into server-only modules during the next milestone. Authentication records will be separate from existing game records, preserving player IDs through an explicit mapping.
+Existing `users` documents retain their ObjectIds and original totals/history. New `dailyResults` enforce one result per player/date; transactions update the result and accumulated total together. Better Auth uses separate `auth*` collections and maps its identity to the legacy player via `authUserId`. Recovery uses a verified email and rejects ambiguous matches. API mutations derive ownership from the signed database-backed session and validate the request Origin.
 
 ## Local state
 
-Existing keys `userID`, `userPoints`, `points`, `timestamp`, and `GOOGLE_SIGNED_IN` are retained. Daily records keep the existing locale-formatted date strings. New `pendingScore` stores a fixed legacy update payload after game completion. Results sync that pending payload, retain it on failure, and offer retry. An in-flight promise prevents concurrent submissions in one tab; success refreshes cached total and clears that payload. Opening or refreshing results without a pending payload makes no score update.
+Existing keys `userID`, `userPoints`, `points`, `timestamp`, and `GOOGLE_SIGNED_IN` remain display/cache data, not authorization. Server sessions establish ownership. New history entries carry a canonical Buenos Aires `isoDate` as well as the display date; legacy records remain intact. `pendingScore` queues a bounded daily result with a local identity marker; the API receives only date, daily points, and duration. Success refreshes the authoritative total/history. Retries retain the payload, and successful result refreshes do not resubmit.
 
-This is an interim legacy synchronization fix. The next backend stage must define authoritative totals and cross-device conflict rules. It must also address a failed pending submission carried into a later day and multiple tabs/devices; current queueing is not a general synchronization engine.
+On reload, `/api/me` restores the current server profile. An unrecognized legacy browser ID is retained in `legacyPlayerSnapshot`, then the player is asked to authenticate again. A raw ID cannot claim a player. Account changes do not replay pending scores into a different identity. A failed result carried across midnight needs an explicit expired-result resolution policy; the server rejects stale challenge dates rather than adding them silently.
 
 Local history and guest identity are origin-scoped. Changing from GitHub Pages to Vercel requires a deliberate guest recovery/transfer strategy. Existing Google-linked players can be mapped from verified identity after conflict checks.
 

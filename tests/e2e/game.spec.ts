@@ -5,13 +5,27 @@ const test = base.extend<{ runtimeErrors: string[] }>({
   runtimeErrors: [async ({ page, context }, use) => {
     const errors: string[] = [];
     page.on("pageerror", error => errors.push(error.message));
+    let registered = false;
+    let player = { _id: "test-user", name: "Ana", points: 5, history: "[]", isAnonymous: false };
+    const authUser = { id: "fixture-auth-user", name: "Ana", email: "guest@anonymous.placeholder.invalid", emailVerified: false, isAnonymous: true };
     await context.route("**/*", async route => {
       const url = new URL(route.request().url());
       if (url.hostname !== "127.0.0.1") return route.abort();
-      if (url.pathname.startsWith("/api/legacy/")) {
-        if (route.request().method() === "POST") return route.fulfill({ json: { _id: "test-user", name: "Ana", points: 0 } });
-        if (route.request().method() === "PUT") return route.fulfill({ json: { points: route.request().postDataJSON().points } });
-        return route.fulfill({ json: [{ _id: "leader", name: "Líder", points: 20 }, { _id: "test-user", name: "Ana", points: 5 }] });
+      if (url.pathname === "/api/config") return route.fulfill({ json: { googleSignInEnabled: false, challengeDate: "2026-10-14" } });
+      if (url.pathname === "/api/auth/get-session") return route.fulfill({ json: registered ? { user: authUser, session: { id: "fixture-session" } } : null });
+      if (url.pathname === "/api/auth/sign-in/anonymous") { registered = true; return route.fulfill({ json: { user: authUser, session: { id: "fixture-session" } } }); }
+      if (url.pathname === "/api/me") {
+        const existing = await page.evaluate(() => localStorage.getItem("userID"));
+        return registered || existing ? route.fulfill({ json: player }) : route.fulfill({ status: 401, json: { message: "UNAUTHORIZED" } });
+      }
+      if (url.pathname === "/api/players") {
+        if (route.request().method() === "POST") { player = { ...player, name: route.request().postDataJSON().name, points: 0, isAnonymous: true }; return route.fulfill({ json: player }); }
+        return route.fulfill({ json: [{ _id: "leader", name: "Líder", points: 20 }, { _id: "test-user", name: player.name, points: player.points }] });
+      }
+      if (url.pathname === "/api/results") {
+        const result = route.request().postDataJSON();
+        if (player.history === "[]") player = { ...player, points: player.points + result.pointsOfDay, history: JSON.stringify([{ date: "10/14/2026", isoDate: result.date, pointsOfDay: result.pointsOfDay, time: result.time }]) };
+        return route.fulfill({ json: player });
       }
       return route.continue();
     });
@@ -54,7 +68,7 @@ test("registers a named player and preserves the ID after reload", async ({ page
 });
 
 test("keeps registration open after a failed request", async ({ page }) => {
-  await page.route("**/api/legacy/users", route => route.fulfill({ status: 503, json: { message: "offline" } }));
+  await page.route("**/api/players", route => route.fulfill({ status: 503, json: { message: "offline" } }));
   await page.goto("/");
   await page.getByPlaceholder("Escribe tu nombre").fill("Ana");
   await page.getByRole("button", { name: "Guardar", exact: true }).click();
@@ -65,7 +79,7 @@ test("keeps registration open after a failed request", async ({ page }) => {
 test("finishes all ten questions and saves a ten-point result once", async ({ page }) => {
   const saves: number[] = [];
   page.on("request", request => {
-    if (request.method() === "PUT" && request.url().endsWith("/update-points")) saves.push(request.postDataJSON().points);
+    if (request.method() === "POST" && request.url().endsWith("/results")) saves.push(request.postDataJSON().pointsOfDay);
   });
   await startGame(page);
   for (const question of OPERATIONS[3]) {
@@ -76,10 +90,10 @@ test("finishes all ten questions and saves a ten-point result once", async ({ pa
   await expect(page).toHaveURL(/\/score$/);
   await expect(page.locator(".ticket h2")).toHaveText("10 PUNTOS");
   await expect.poll(() => saves.length).toBe(1);
-  expect(saves).toEqual([15]);
+  expect(saves).toEqual([10]);
   await page.reload();
   await expect(page.locator(".ticket h2")).toHaveText("10 PUNTOS");
-  expect(saves).toEqual([15]);
+  expect(saves).toEqual([10]);
 });
 
 test("ends on a wrong answer and blocks another attempt today", async ({ page }) => {
@@ -106,9 +120,9 @@ test("times out at the configured deadline", async ({ page }) => {
 
 test("retries a failed score save without losing the local result", async ({ page }) => {
   let fail = true;
-  await page.route("**/api/legacy/users/update-points", route => route.fulfill(fail
+  await page.route("**/api/results", route => route.fulfill(fail
     ? { status: 503, json: { message: "offline" } }
-    : { json: { points: 5 } }));
+    : { json: { points: 5, history: JSON.stringify([{ date: "10/14/2026", isoDate: "2026-10-14", pointsOfDay: 0, time: 3 }]) } }));
   await startGame(page);
   await page.clock.runFor(5000);
   await expect(page.locator("main").getByRole("alert")).toContainText("No se pudo sincronizar");

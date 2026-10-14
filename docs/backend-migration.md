@@ -19,3 +19,9 @@ Testing is staged: pure history/date validation is covered in this milestone; th
 `npm run test:integration` starts its own ephemeral MongoDB 8.0.17 replica set on a random loopback port and stops it afterward. It does not read `MONGODB_URI`, `DATA_BASE`, or any `.env` file. A loopback guard rejects unexpected server addresses. No Docker installation or external database is required; the first run downloads the MongoDB binary.
 
 Ten real database tests pass: guest persistence/retries, verified existing-player recovery, unverified-email rejection, conflicting-email rejection, public-field projection, atomic daily score updates, concurrent deduplication, rejection of target-ID/total manipulation, invalid/expired submissions, and transaction rollback for corrupted stored history. These checks are now part of CI.
+
+## Milestone 3: Authenticated application
+
+Next.js now owns all active API routes. Firebase and the AWS bridge are removed. Better Auth supplies real signed guest sessions and optional Google OAuth. Browser code submits bounded daily results and receives authoritative totals; it cannot target another player. Public rankings exclude emails/history. Canonical dates are carried in new history entries so restored history is visible across browser date formats.
+
+Verified locally: production build, lint/typecheck, 39 unit/component tests, 20 real MongoDB/Better Auth integration tests, and 16 desktop/mobile UI cases. Real Google OAuth is pending the credentials the user chose to configure later. Production has not been connected or changed.
