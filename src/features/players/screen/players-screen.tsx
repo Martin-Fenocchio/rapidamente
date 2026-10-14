@@ -1,11 +1,12 @@
 import "src/assets/style/players.scss";
-import Logo from "src/assets/images/menterapida.svg";
+import { assetUrl } from "src/lib/assets";
+const Logo = assetUrl("menterapida.svg");
 import { usePlayers } from "../hooks/usePlayers";
 import Hyperspeed from "src/components/background/hyperspeedBackground";
 import PodiumSkeleton from "src/components/podium/PodiumSkeleton";
 
 function PlayersScreen() {
-  const { players, isLoading } = usePlayers();
+  const { players, isLoading, error, retry } = usePlayers();
 
   return (
     <main className="players-screen">
@@ -26,6 +27,7 @@ function PlayersScreen() {
       <img src={Logo} className="logo" />
 
       <div className="players-list ranking">
+        {error && <div role="alert">{error} <button onClick={retry}>Reintentar</button></div>}
         {isLoading ? (
           <PodiumSkeleton amount={30} />
         ) : (
@@ -36,7 +38,7 @@ function PlayersScreen() {
             </article>
             {players.map((player, index) => {
               return (
-                <article
+                <article key={player._id}
                   className={`ranking-row ${index === 0 && "current"} ${
                     index == 1 && "next"
                   }`}

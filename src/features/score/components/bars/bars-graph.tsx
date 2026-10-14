@@ -31,7 +31,7 @@ function BarsGraph() {
   const getAverage = () => {
     const historicalPoints = getHistoricalPoints();
 
-    let payload = historicalPoints
+    const payload = historicalPoints
       .filter((i) => i.time != null)
       .map((item) => (item?.time ?? 1) / (item.pointsOfDay ?? 1));
 

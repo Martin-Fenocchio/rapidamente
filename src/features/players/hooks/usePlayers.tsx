@@ -1,14 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { IPlayer } from "../models/players-models";
-import { API_URL } from "src/App";
+import { API_URL } from "src/lib/api";
 
 export const usePlayers = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [players, setPlayers] = useState<IPlayer[]>([]);
 
   const handleGetPlayers = async () => {
     setIsLoading(true);
+    setError(null);
 
     try {
       const userID = localStorage.getItem("userID");
@@ -23,6 +25,8 @@ export const usePlayers = () => {
           localStorage.setItem("userPoints", `${player.points}`);
         }
       });
+    } catch {
+      setError("No se pudieron cargar los puntajes. Intentá de nuevo.");
     } finally {
       setIsLoading(false);
     }
@@ -30,7 +34,7 @@ export const usePlayers = () => {
 
   const handleGeneratePodium = () => {
     const userID = localStorage.getItem("userID");
-    const sortedPlayers = players.sort((a, b) => b.points - a.points);
+    const sortedPlayers = [...players].sort((a, b) => b.points - a.points);
     let morePoints = null;
     let lessPoints = null;
     let secondLessPoints = null;
@@ -88,6 +92,8 @@ export const usePlayers = () => {
 
   return {
     isLoading,
+    error,
+    retry: handleGetPlayers,
     players,
     handleGeneratePodium,
   };

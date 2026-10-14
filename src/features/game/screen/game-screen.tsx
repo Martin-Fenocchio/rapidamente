@@ -1,124 +1,59 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Countdown from "../components/countdown/countdown";
 import Calculation from "../components/calculation/calculation";
-import Logo from "src/assets/images/menterapida.svg";
+import { assetUrl } from "src/lib/assets";
 import ProgressBar from "@ramonak/react-progress-bar";
-import { useNavigate } from "react-router-dom";
-import {
-  getOperationsOfDay,
-  OPERATIONS as OperationsList,
-} from "../data/operations";
-import { savePointsOfDay } from "src/utils/points/points-utils";
-import { setStateAsync } from "src/utils/misc/misc";
+import { useRouter } from "next/navigation";
+import { getOperationsOfDay } from "../data/operations";
+import { checkVavePlayedToday, savePointsOfDay } from "src/utils/points/points-utils";
 import { calculateTime } from "src/utils/date-utils";
 import Squares from "src/components/squarredBackground/SquarredBackground";
 import { GAME_SHORT_TIME, getGameTime } from "src/utils/game/game-utils";
 import { useAnalytics } from "src/hooks/useAnalytics";
+import { queueScore } from "src/lib/score-sync";
 
 function GameScreen() {
-  const navigate = useNavigate();
-  const analytics = useAnalytics();
-
-  const [operationIndex, setOperationIndex] = useState<number>(0);
-  const [operations, setOperations] = useState(OperationsList[0]);
+  const router = useRouter();
+  const { trackGameEnd } = useAnalytics();
+  const [operationIndex, setOperationIndex] = useState(0);
+  const [operations] = useState(getOperationsOfDay);
   const [countdown, setCountdown] = useState(GAME_SHORT_TIME);
-
   const [haveFinishedCountdown, setHaveFinishedCountdown] = useState(false);
-
-  const onAnswer = async (isCorrect: boolean) => {
-    const currentIndex = await setStateAsync(setOperationIndex);
-    const wasLastOperation = currentIndex === OperationsList.length - 1;
-
-    if (!isCorrect || wasLastOperation) {
-      onFinishGmae(isCorrect);
-
-      return;
-    }
-
-    setCountdown(getGameTime(currentIndex));
-    setOperationIndex((prevIndex: number) => {
-      return prevIndex + 1;
-    });
-  };
-
-  const onFinishGmae = async (isCorrect: boolean) => {
-    const currentIndex = await setStateAsync(setOperationIndex);
-    const pointsMade = currentIndex + (isCorrect ? 1 : 0);
-    const time = calculateTime();
-
-    savePointsOfDay(pointsMade, time);
-
-    const operation = operations[currentIndex];
-
-    console.log("currentIndex", currentIndex);
-    console.log("operations", operations);
-
-    console.log("operation", operation);
-
-    analytics.trackGameEnd({
-      score: pointsMade,
-      duration: time,
-      operation: operation.operation,
-      isCorrect: isCorrect,
-    });
-
-    setTimeout(() => {
-      navigate("/score", {
-        state: {
-          points: pointsMade,
-          time: time,
-        },
-        replace: true,
-      });
-    }, 2500);
-  };
-
-  const calculatePercentage = (countdown: number | null) => {
-    if (countdown === null) return 0;
-    return (countdown / getGameTime(operationIndex)) * 100;
-  };
+  const finished = useRef(false);
+  const navigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setOperations(getOperationsOfDay() ?? []);
-  }, []);
+    if (checkVavePlayedToday()) router.replace("/score");
+    return () => { if (navigationTimer.current) clearTimeout(navigationTimer.current); };
+  }, [router]);
 
-  const percentage = calculatePercentage(countdown);
+  const onAnswer = useCallback((isCorrect: boolean) => {
+    if (finished.current) return;
+    if (isCorrect && operationIndex < operations.length - 1) {
+      setOperationIndex(operationIndex + 1);
+      return;
+    }
+    finished.current = true;
+    const points = operationIndex + (isCorrect ? 1 : 0);
+    const time = calculateTime();
+    savePointsOfDay(points, time);
+    queueScore();
+    trackGameEnd({ score: points, duration: time, operation: operations[operationIndex].operation, isCorrect });
+    navigationTimer.current = setTimeout(() => router.replace("/score"), 2500);
+  }, [operationIndex, operations, router, trackGameEnd]);
 
-  return (
-    <>
-      <div className="squares-container">
-        <Squares
-          speed={0.5}
-          squareSize={30}
-          direction="diagonal"
-          borderColor="#fff"
-          hoverFillColor="#222"
-        />
-      </div>
-      <div
-        className="circle-animation"
-        transition-style="out:circle:center"
-      ></div>
-      <main className="game-screen">
-        <img src={Logo} className="logo" />
-
-        {!haveFinishedCountdown ? (
-          <Countdown onFinishCountdown={() => setHaveFinishedCountdown(true)} />
-        ) : (
-          <>
-            <ProgressBar completed={percentage < 0 ? 0 : percentage} />
-            <Calculation
-              onAnswer={onAnswer}
-              setCountdown={setCountdown}
-              operation={operations[operationIndex]}
-              operationIndex={operationIndex}
-              timeIsOver={countdown <= -1}
-            />
-          </>
-        )}
-      </main>
-    </>
-  );
+  const startQuestions = useCallback(() => setHaveFinishedCountdown(true), []);
+  const percentage = Math.max(0, countdown / getGameTime(operationIndex) * 100);
+  return <>
+    <div className="squares-container"><Squares speed={0.5} squareSize={30} direction="diagonal" borderColor="#fff" hoverFillColor="#222" /></div>
+    <div className="circle-animation" transition-style="out:circle:center" />
+    <main className="game-screen">
+      <img src={assetUrl("menterapida.svg")} className="logo" alt="RápidaMente" />
+      {!haveFinishedCountdown ? <Countdown onFinishCountdown={startQuestions} /> : <>
+        <ProgressBar completed={percentage} />
+        <Calculation key={operationIndex} operation={operations[operationIndex]} operationIndex={operationIndex} onAnswer={onAnswer} setCountdown={setCountdown} />
+      </>}
+    </main>
+  </>;
 }
-
 export default GameScreen;

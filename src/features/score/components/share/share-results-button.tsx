@@ -4,8 +4,9 @@ import {
   generateMessage,
   handleShareResults,
 } from "src/utils/points/points-utils";
-import WspIcon from "src/assets/images/wsp.png";
-import CopyIcon from "src/assets/images/copy.png";
+import { assetUrl } from "src/lib/assets";
+const WspIcon = assetUrl("wsp.png");
+const CopyIcon = assetUrl("copy.png");
 
 interface Props {
   points: number;

@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { isFirebaseConfigured } from "src/utils/firebase/firebase";
 import { useAnalytics } from "src/hooks/useAnalytics";
 import {
   checkVavePlayedToday,
@@ -8,7 +10,7 @@ import {
 import { getStreak } from "src/utils/streak/streak";
 
 export const useOnboardingLogic = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const analytics = useAnalytics();
 
   const [showAnimation, setShowAnimation] = useState(false);
@@ -20,6 +22,11 @@ export const useOnboardingLogic = () => {
   const [isSavingName, setIsSavingName] = useState(false);
   const [streak, setStreak] = useState(0);
   const [showModalSignIn, setShowModalSignIn] = useState(false);
+  const startTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (startTimer.current) clearTimeout(startTimer.current);
+  }, []);
 
   const openModal = () => setOpenModalName(true);
   const closeModal = () => setOpenModalName(false);
@@ -30,7 +37,7 @@ export const useOnboardingLogic = () => {
     if (!userID || userID == "undefined") openModal();
   };
 
-  const handleOnSaveName = async (callback: (name: string) => void) => {
+  const handleOnSaveName = async (callback: (name: string) => Promise<void>) => {
     if (!nameController) {
       setErrormessage("Debes escribir un nombre");
       return;
@@ -39,11 +46,11 @@ export const useOnboardingLogic = () => {
     setIsSavingName(true);
 
     try {
-      callback(nameController);
+      await callback(nameController);
       closeModal();
-    } catch (error: any) {
+    } catch (error: unknown) {
       const isDuplicatedName =
-        error.response.data.message === "NAME_ALREADY_EXISTS";
+        axios.isAxiosError(error) && error.response?.data?.message === "NAME_ALREADY_EXISTS";
 
       if (isDuplicatedName) {
         setErrormessage(
@@ -58,12 +65,13 @@ export const useOnboardingLogic = () => {
   };
 
   const handleStartGame = () => {
+    if (startTimer.current) return;
     setShowAnimation(true);
 
     analytics.trackGameStart();
 
-    setTimeout(() => {
-      navigate("/game");
+    startTimer.current = setTimeout(() => {
+      router.push("/game");
     }, 800);
   };
 
@@ -71,7 +79,7 @@ export const useOnboardingLogic = () => {
     const haveSignedIn = localStorage.getItem("GOOGLE_SIGNED_IN") == "true";
     const userID = localStorage.getItem("userID");
 
-    if (!haveSignedIn && userID && userID !== "undefined") {
+    if (isFirebaseConfigured && !haveSignedIn && userID && userID !== "undefined") {
       setShowModalSignIn(true);
     }
   };

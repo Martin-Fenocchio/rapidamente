@@ -1,4 +1,5 @@
-import Logo from "src/assets/images/menterapida.svg";
+import { assetUrl } from "src/lib/assets";
+const Logo = assetUrl("menterapida.svg");
 import "src/assets/style/onboarding.scss";
 import "transition-style";
 import OnboardingPlayer from "../components/onboarding-player";
@@ -12,7 +13,7 @@ import ModalSignIn from "src/components/google/ModalSignIn";
 import Podium from "src/components/podium/Podium";
 
 interface Props {
-  onSaveName: (name: string) => void;
+  onSaveName: (name: string) => Promise<void>;
 }
 
 function OnboardingScreen(props: Props) {

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getSumOfPoints } from "../points/points-utils";
-import { API_URL } from "src/App";
+import { API_URL } from "src/lib/api";
 import toast from "react-hot-toast";
 import { useAnalytics } from "src/hooks/useAnalytics";
 

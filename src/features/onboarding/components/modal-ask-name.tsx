@@ -3,7 +3,7 @@ import { useOnboardingLogic } from "../hooks/onboarding-hook";
 import { Modal } from "react-responsive-modal";
 
 interface Props {
-  onSaveName: (name: string) => void;
+  onSaveName: (name: string) => Promise<void>;
 }
 
 function ModalAskName(props: Props) {

@@ -9,18 +9,15 @@ type GameEndData = {
 
 export function useAnalytics() {
   const sendEvent = useCallback(
-    (eventName: string, eventParams: Record<string, any> = {}) => {
+    (eventName: string, eventParams: Record<string, unknown> = {}) => {
       try {
-        const gtag = (window as any).gtag;
-
-        console.log("gtag", gtag);
+        const gtag = (window as Window & { gtag?: (event: string, name: string, params: Record<string, unknown>) => void }).gtag;
 
         if (typeof window !== "undefined" && typeof gtag === "function") {
           gtag("event", eventName, eventParams);
-        } else {
-          console.warn("gtag no está disponible");
+
         }
-      } catch (error) {
+      } catch {
         //
       }
     },
@@ -32,7 +29,7 @@ export function useAnalytics() {
       sendEvent("game_start", {
         timestamp: Date.now(),
       });
-    } catch (error) {
+    } catch {
       //
     }
   }, [sendEvent]);

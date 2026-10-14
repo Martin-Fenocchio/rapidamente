@@ -1,22 +1,20 @@
-import Logo from "src/assets/images/menterapida.svg";
+import { assetUrl } from "src/lib/assets";
+const Logo = assetUrl("menterapida.svg");
 import { HistoryGrid } from "../components/grid/history-grid";
 import "src/assets/style/score-screen.scss";
 import "src/assets/style/ticket.scss";
 import Ticket from "../components/ticket/ticket";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { calculateWeeks } from "src/utils/date-utils";
 import ShareResultsButton from "../components/share/share-results-button";
 import Confetti from "react-confetti";
 import BarsGraph from "../components/bars/bars-graph";
-import axios from "axios";
+import { syncPendingScore } from "src/lib/score-sync";
 import {
-  getHistoricalPoints,
   getScoreOfToday,
-  getSumOfPoints,
 } from "src/utils/points/points-utils";
-import StarIcon from "src/assets/images/star.svg";
-import { API_URL } from "src/App";
+const StarIcon = assetUrl("star.svg");
 import Particles from "src/components/blocks/Backgrounds/Particles/Particles";
 import ShinyText from "src/components/shinyText/shinyText";
 import { getStreak } from "src/utils/streak/streak";
@@ -28,26 +26,16 @@ function ScoreScreen() {
   const [streak, setStreak] = useState(0);
 
   const handleResetGame = () => {
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === "development") {
       localStorage.removeItem("points");
       window.location.href = "/";
     }
   };
 
+  const [saveError, setSaveError] = useState(false);
   const handleSavePoints = () => {
-    try {
-      const history = getHistoricalPoints();
-      const lastHistory = history[history.length - 1];
-      const lastPoints = lastHistory?.pointsOfDay ?? 0;
-
-      axios.put(`${API_URL}/users/update-points`, {
-        id: localStorage.getItem("userID"),
-        points: getSumOfPoints() + lastPoints,
-        history: JSON.stringify(history),
-      });
-    } catch (error) {
-      //
-    }
+    setSaveError(false);
+    void syncPendingScore().catch(() => setSaveError(true));
   };
 
   useEffect(() => {
@@ -79,6 +67,7 @@ function ScoreScreen() {
         {showConfetti && <Confetti />}
         <img src={Logo} className="logo" onClick={handleResetGame} />
         <Ticket points={points} />
+        {saveError && <div role="alert">Tu resultado está guardado en este dispositivo. No se pudo sincronizar. <button onClick={handleSavePoints}>Reintentar</button></div>}
 
         <h4>Tu ranking mensual:</h4>
         <HistoryGrid weeks={weeks} />
@@ -90,7 +79,7 @@ function ScoreScreen() {
         </p>
 
         <ShareResultsButton points={points} />
-        <Link to="/players">
+        <Link href="/players">
           <img src={StarIcon} />
           Ver puntajes de jugadores
         </Link>

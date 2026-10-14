@@ -1,39 +1,25 @@
 import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["dist/**", ".next/**", "next-env.d.ts", "playwright-report/**", "test-results/**"] },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:prettier/recommended"
-    ],
     files: ["**/*.{ts,tsx}"],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser
-    },
-    plugins: {
-      "react-hooks": reactHooks,
-      "react-refresh": reactRefresh
-    },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true }
-      ],
-      "prettier/prettier": [
-        "error",
-        { singleQuote: false, trailingComma: "none" }
-      ]
-    }
-  }
+    plugins: { "react-hooks": reactHooks },
+    rules: { "react-hooks/rules-of-hooks": "error" },
+  },
+  {
+    files: ["src/app/**/*.{ts,tsx}", "src/features/game/**/*.{ts,tsx}"],
+    rules: { "react-hooks/exhaustive-deps": "error" },
+  },
+  // Existing visual/utility code has broad third-party types. Tighten as it is refactored.
+  {
+    files: ["src/components/background/**", "src/components/blocks/**", "src/components/podium/**", "src/features/onboarding/hooks/share-results-button-hook.ts", "src/utils/misc/**"],
+    rules: { "@typescript-eslint/no-explicit-any": "off" },
+  },
 );

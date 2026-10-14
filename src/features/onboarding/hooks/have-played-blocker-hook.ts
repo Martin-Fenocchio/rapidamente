@@ -5,7 +5,7 @@ export const useHavePlayedBlocker = () => {
   const [pointsOfDay, setPointsOfDay] = useState(0);
 
   const resetGame = () => {
-    if (import.meta.env.DEV) {
+    if (process.env.NODE_ENV === "development") {
       localStorage.removeItem("points");
       window.location.reload();
     }

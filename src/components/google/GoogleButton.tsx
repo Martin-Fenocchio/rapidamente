@@ -1,10 +1,11 @@
 // src/components/LoginButton.tsx
 import { signInWithPopup } from "firebase/auth";
-import { FIREBASE_AUTH, FIREBASE_PROVIDER } from "src/utils/firebase/firebase";
-import GoogleIcon from "../../assets/images/google-icon.svg";
+import { getFirebaseAuth, isFirebaseConfigured } from "src/utils/firebase/firebase";
+import { assetUrl } from "src/lib/assets";
+const GoogleIcon = assetUrl("google-icon.svg");
 import { useState } from "react";
 import axios from "axios";
-import { API_URL } from "src/App";
+import { API_URL } from "src/lib/api";
 import toast from "react-hot-toast";
 
 interface Props {
@@ -17,7 +18,8 @@ export default function GoogleButton({ signingUp, onFinish }: Props) {
 
   const handleLogin = async () => {
     try {
-      const result = await signInWithPopup(FIREBASE_AUTH, FIREBASE_PROVIDER);
+      const { auth, provider } = getFirebaseAuth();
+      const result = await signInWithPopup(auth, provider);
       const email = result.user.email;
 
       if (!email) return;
@@ -71,9 +73,11 @@ export default function GoogleButton({ signingUp, onFinish }: Props) {
     localStorage.setItem("userPoints", `${response.data.points ?? 0}`);
   };
 
+  if (!isFirebaseConfigured) return null;
+
   return (
     <button onClick={handleLogin} className="google-button">
-      <img src={GoogleIcon} />
+      <img src={GoogleIcon} alt="" />
       {isLoading ? "Procesando datos" : "Iniciar sesión"}
     </button>
   );

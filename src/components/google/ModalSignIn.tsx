@@ -1,4 +1,5 @@
-import Maths from "../../assets/images/maths.png";
+import { assetUrl } from "src/lib/assets";
+const Maths = assetUrl("maths.png");
 import GoogleButton from "./GoogleButton";
 
 interface Props {

@@ -26,3 +26,13 @@ dist-ssr
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Next.js, environments, and test artifacts
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+.env*
+!.env.example
+playwright-report/
+test-results/

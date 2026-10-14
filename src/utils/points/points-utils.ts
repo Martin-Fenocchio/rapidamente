@@ -102,7 +102,7 @@ export const generateMessage = (points: number, time: number) => {
     )
     .join("\n");
 
-  payload += `\n\Velocidad: ${(time / points).toFixed(
+  payload += `\nVelocidad: ${(time / points).toFixed(
     1
   )} segundos por cuenta.\n\nJuega en https://www.martinfenocchio.com/rapidamente`;
   console.log(payload);

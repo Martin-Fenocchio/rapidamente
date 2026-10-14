@@ -1231,6 +1231,11 @@ class App {
 
   dispose() {
     this.disposed = true;
+    this.container.removeEventListener("mousedown", this.onMouseDown);
+    this.container.removeEventListener("mouseup", this.onMouseUp);
+    this.container.removeEventListener("mouseout", this.onMouseUp);
+    this.composer.dispose();
+    this.renderer.dispose();
   }
 
   setSize(width: number, height: number, updateStyles: boolean) {
@@ -1267,9 +1272,14 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = {} }) => {
     }
 
     const myApp = new App(container, mergedOptions);
-    myApp.loadAssets().then(myApp.init);
+    let mounted = true;
+    myApp.loadAssets().then(() => { if (mounted) myApp.init(); });
+    return () => {
+      mounted = false;
+      myApp.dispose();
+      container.replaceChildren();
+    };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div id="lights" ref={hyperspeed}></div>;

@@ -5,7 +5,7 @@ interface Props {
   onFinishCountdown: (value: boolean) => void;
 }
 
-function Countdown(props: Props) {
+function Countdown({ onFinishCountdown }: Props) {
   const [count, setCount] = useState(4);
 
   useEffect(() => {
@@ -13,10 +13,10 @@ function Countdown(props: Props) {
       const timer = setTimeout(() => setCount(count - 1), 1000);
       return () => clearTimeout(timer);
     } else {
-      props.onFinishCountdown(true);
       localStorage.setItem("timestamp", new Date().getTime().toString());
+      onFinishCountdown(true);
     }
-  }, [count]);
+  }, [count, onFinishCountdown]);
 
   return <div className="countdown"> {count}</div>;
 }

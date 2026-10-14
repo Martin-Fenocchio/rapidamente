@@ -4,7 +4,7 @@ import { useEffect, useReducer } from "react";
 import PodiumSkeleton from "./PodiumSkeleton";
 
 function Podium() {
-  const { isLoading, handleGeneratePodium } = usePlayers();
+  const { isLoading, error, retry, handleGeneratePodium } = usePlayers();
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const { morePoints, lessPoints, currentPlayer, secondLessPoints } =
@@ -39,7 +39,7 @@ function Podium() {
       <h2 className="title">
         <ShinyText text="Ranking actual" />
       </h2>
-      {isLoading || !currentPlayer ? (
+      {error ? <div role="alert">{error} <button onClick={retry}>Reintentar</button></div> : isLoading || !currentPlayer ? (
         <PodiumSkeleton />
       ) : (
         <>

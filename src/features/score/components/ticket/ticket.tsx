@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import TicketBackground from "src/assets/images/ticket.svg";
+import { assetUrl } from "src/lib/assets";
+const TicketBackground = assetUrl("ticket.svg");
 
 interface Props {
   points: number;
