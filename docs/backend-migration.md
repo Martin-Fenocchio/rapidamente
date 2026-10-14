@@ -1,0 +1,15 @@
+# Backend consolidation
+
+## Milestone 1: Domain services
+
+The frontend repository now contains MongoDB domain services under `src/server/players`, a reusable server-only connection under `src/server/db`, and runtime validation. These services are not exposed through unauthenticated mutation endpoints. The UI still uses the temporary bridge until Better Auth and authenticated routes are integrated.
+
+The native MongoDB driver uses the existing `users` collection and preserves ObjectId player IDs, names, original score totals, email, and serialized history. Better Auth identities will be mapped through a separate `authUserId` field. Rankings project only IDs, names, and points. Recovery requires verified identity; duplicate legacy emails produce an explicit conflict rather than silently merging records.
+
+New daily results use a separate `dailyResults` collection, a unique player/date index, and a transaction that records the result and increments the stored total together. The server accepts a bounded daily score, not a client-supplied accumulated total or target player ID. First completed attempt wins; retries return the existing total. This requires a replica set, as provided by MongoDB Atlas and the isolated test harness. The later game-engine milestone can validate individual answers; bounded reported scores are not comprehensive anti-cheat protection.
+
+The canonical new challenge date is the Buenos Aires calendar day. Legacy date strings/extra history fields remain unchanged. New history entries include `isoDate` while retaining a compatible displayed date. Old ambiguous history dates will need an explicit recovery policy; do not silently rewrite them.
+
+`MONGODB_URI` and `MONGODB_DB` are server-only and both mandatory. There is no production fallback and no database connection during module import or static builds. Configuration variable names are recorded in `.env.example`; credentials are never documented. Runtime connections reuse a bounded pool.
+
+Testing is staged: pure history/date validation is covered in this milestone; the next milestone adds real isolated MongoDB integration coverage before these services become active API endpoints. No production database was connected or mutated for this milestone.
