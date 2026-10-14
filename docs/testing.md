@@ -28,7 +28,7 @@ Playwright covers desktop Chromium and a Pixel 7 viewport, using a fixed Wednesd
 - Weekday challenge selection, timing constants, and arithmetic correctness of the entire bank.
 - Unique answer options, correct/wrong answers, exact deadlines, and timer cleanup.
 - Registration awaiting completion, failure recovery, required input, and entry navigation.
-- Pending-score single-flight behavior, cache refresh, and retry persistence.
+- Pending-score single-flight behavior, cache refresh, retry persistence, and stale startup responses after registration.
 - Signed sessions, expiry/logout, verified recovery/linking, origin checks, input validation, transaction rollback, and duplicate concurrent results.
 - Legacy hash routing, rejecting unknown/external routes.
 - Browser journeys: registration/reload and failed registration, ten correct answers, wrong answer/daily blocker, direct route guard, timeout, failed-save retry, leaderboard/hash links/refresh, and desktop/mobile home assets.

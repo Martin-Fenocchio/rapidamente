@@ -6,7 +6,7 @@ Verified locally on 2026-10-14 with Node.js 24.21.0, Next.js 16.4.1, and React 1
 | --- | --- |
 | `npm run lint` | Passed, zero warnings |
 | `npm run typecheck` | Passed, including Next.js route types |
-| `npm test` | 39 tests passed across eight files |
+| `npm test` | 43 tests passed across nine files |
 | `npm run test:integration` | 23 tests passed across three files |
 | `npm run build` | Passed: screens and consolidated auth/player/result APIs |
 | `npm run test:e2e` | 16 desktop/mobile Chromium UI cases passed |
@@ -32,3 +32,5 @@ The build warns that React 18 is deprecated by Next.js because the current card-
 [Protected preview](https://rapidamente-cfyan98ws-personal-385b.vercel.app) deployed successfully from application commit `97f895d`. Twelve hosted checks passed: configuration, denied anonymous private access, real guest cookie, registration, owned-player retrieval, score persistence, first-result retention on retry, target-ID rejection, origin rejection, public-field projection, logout, and session invalidation. Verification created one synthetic player only in `test_nextjs_preview`; source records read: zero. Preview protection remains enabled.
 
 The earlier database milestone passed [GitHub Actions run 38639197462](https://github.com/Martin-Fenocchio/rapidamente/actions/runs/38639197462). The browser verification milestone is undergoing [run 38642570978](https://github.com/Martin-Fenocchio/rapidamente/actions/runs/38642570978); consult its final result and the branch's latest run before merging. Deployment documentation commits trigger the same complete workflow.
+
+A final session-restoration regression verifies that stale startup success/401 responses cannot overwrite a newly registered identity. Local tests cover both race outcomes and the normal restoration/legacy backup paths.

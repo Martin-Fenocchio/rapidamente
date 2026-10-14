@@ -16,8 +16,14 @@ export function applyPlayer(player: CurrentPlayer) {
   window.dispatchEvent(new Event("sessionUpdated"));
 }
 export async function restorePlayer() {
-  try { const response = await axios.get(`${API_URL}/me`); applyPlayer(response.data); }
+  const expectedPlayer = localStorage.getItem("userID");
+  try {
+    const response = await axios.get(`${API_URL}/me`);
+    if (localStorage.getItem("userID") === expectedPlayer) applyPlayer(response.data);
+  }
   catch (error) {
+    // A startup response must not replace a session established while it was in flight.
+    if (localStorage.getItem("userID") !== expectedPlayer) return;
     if (axios.isAxiosError(error) && [401, 404].includes(error.response?.status ?? 0)) {
       const id = localStorage.getItem("userID");
       if (id && !localStorage.getItem("legacyPlayerSnapshot")) localStorage.setItem("legacyPlayerSnapshot", JSON.stringify({ userID: id, userPoints: localStorage.getItem("userPoints"), points: localStorage.getItem("points") }));
