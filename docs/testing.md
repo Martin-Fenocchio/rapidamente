@@ -7,6 +7,7 @@ npm ci
 npm run lint
 npm run typecheck
 npm test
+npm run test:integration
 npm run build
 npx playwright install chromium
 npm run test:e2e
@@ -32,6 +33,8 @@ Playwright covers desktop Chromium and a Pixel 7 viewport, using a fixed Wednesd
 - Browser journeys: registration/reload and failed registration, ten correct answers, wrong answer/daily blocker, direct route guard, timeout, failed-save retry, leaderboard/hash links/refresh, and desktop/mobile home assets.
 
 The current suite is a migration safety net, not exhaustive coverage of every legacy component. Real MongoDB integration, Better Auth sessions, Google OAuth, cross-device conflicts, other browser engines, accessibility, and remaining calendar/streak edge cases require subsequent coverage.
+
+Backend-service milestone: `npm run test:integration` now exercises real MongoDB transactions in an ephemeral loopback replica set. It never reads production environment files. First run downloads MongoDB 8.0.17; later runs reuse the cached binary. Better Auth and endpoint/session tests are added in the authentication milestone.
 
 ## CI and evidence
 

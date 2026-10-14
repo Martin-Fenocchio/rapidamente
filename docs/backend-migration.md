@@ -13,3 +13,9 @@ The canonical new challenge date is the Buenos Aires calendar day. Legacy date s
 `MONGODB_URI` and `MONGODB_DB` are server-only and both mandatory. There is no production fallback and no database connection during module import or static builds. Configuration variable names are recorded in `.env.example`; credentials are never documented. Runtime connections reuse a bounded pool.
 
 Testing is staged: pure history/date validation is covered in this milestone; the next milestone adds real isolated MongoDB integration coverage before these services become active API endpoints. No production database was connected or mutated for this milestone.
+
+## Milestone 2: Isolated database integration tests
+
+`npm run test:integration` starts its own ephemeral MongoDB 8.0.17 replica set on a random loopback port and stops it afterward. It does not read `MONGODB_URI`, `DATA_BASE`, or any `.env` file. A loopback guard rejects unexpected server addresses. No Docker installation or external database is required; the first run downloads the MongoDB binary.
+
+Ten real database tests pass: guest persistence/retries, verified existing-player recovery, unverified-email rejection, conflicting-email rejection, public-field projection, atomic daily score updates, concurrent deduplication, rejection of target-ID/total manipulation, invalid/expired submissions, and transaction rollback for corrupted stored history. These checks are now part of CI.
