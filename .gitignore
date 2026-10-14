@@ -40,3 +40,5 @@ test-results/
 
 # Private migration backups and environment material
 .migration-private/
+
+playwright-report-api/

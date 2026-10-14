@@ -1,11 +1,13 @@
 import { act, renderHook } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { useOnboardingLogic } from "./onboarding-hook";
 
 const router = vi.hoisted(() => ({ push: vi.fn(), replace: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => router }));
 
 describe("onboarding interactions", () => {
+  beforeEach(() => vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ json: async () => ({ googleSignInEnabled: false }) })));
+  afterEach(() => vi.unstubAllGlobals());
   afterEach(() => vi.useRealTimers());
   it("keeps the name dialog open and loading until registration completes", async () => {
     const { result } = renderHook(useOnboardingLogic);

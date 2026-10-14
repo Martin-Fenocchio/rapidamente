@@ -18,10 +18,18 @@ Testing is staged: pure history/date validation is covered in this milestone; th
 
 `npm run test:integration` starts its own ephemeral MongoDB 8.0.17 replica set on a random loopback port and stops it afterward. It does not read `MONGODB_URI`, `DATA_BASE`, or any `.env` file. A loopback guard rejects unexpected server addresses. No Docker installation or external database is required; the first run downloads the MongoDB binary.
 
-Ten real database tests pass: guest persistence/retries, verified existing-player recovery, unverified-email rejection, conflicting-email rejection, public-field projection, atomic daily score updates, concurrent deduplication, rejection of target-ID/total manipulation, invalid/expired submissions, and transaction rollback for corrupted stored history. These checks are now part of CI.
+The initial ten real database tests pass: guest persistence/retries, verified existing-player recovery, unverified-email rejection, conflicting-email rejection, public-field projection, atomic daily score updates, concurrent deduplication, rejection of target-ID/total manipulation, invalid/expired submissions, and transaction rollback for corrupted stored history. These checks are now part of CI.
 
 ## Milestone 3: Authenticated application
 
 Next.js now owns all active API routes. Firebase and the AWS bridge are removed. Better Auth supplies real signed guest sessions and optional Google OAuth. Browser code submits bounded daily results and receives authoritative totals; it cannot target another player. Public rankings exclude emails/history. Canonical dates are carried in new history entries so restored history is visible across browser date formats.
 
 Verified locally: production build, lint/typecheck, 39 unit/component tests, 20 real MongoDB/Better Auth integration tests, and 16 desktop/mobile UI cases. Real Google OAuth is pending the credentials the user chose to configure later. Production has not been connected or changed.
+
+## Milestone 4: Browser-to-database verification
+
+Six browser journeys pass through the actual Next.js API, real Better Auth cookies, and real MongoDB transactions on desktop/mobile. The harness owns a loopback replica set and injects only its generated URI/signing secret into its child server. It contains no production authentication bypass and never reads the private preview configuration. Tests cover guest registration/private recovery/logout, ten correct answers with authoritative persistence/retry/reload/daily blocking, and denial of unauthenticated, cross-origin, or impersonated updates.
+
+Real browser checks found and fixed the unavailable-Google prompt and a canvas that intercepted logout clicks. These checks are now included in CI alongside the 16 fixture-based UI journeys. Google OAuth itself still requires the user-supplied credentials and a staging test account.
+
+Preview origin configuration is tested separately: explicit canonical URLs take precedence, exact branch/deployment hosts are trusted, and missing or short signing secrets fail closed. CI uses one browser worker because concurrent animated screens overloaded the runner in the previous milestone.

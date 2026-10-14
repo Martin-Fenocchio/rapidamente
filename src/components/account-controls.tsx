@@ -20,7 +20,7 @@ export default function AccountControls() {
       window.dispatchEvent(new Event("sessionUpdated"));
     } catch { setError(true); }
   };
-  return signedIn ? <div style={{ textAlign: "center", padding: "1rem" }}>
+  return signedIn ? <div style={{ textAlign: "center", padding: "1rem", position: "relative", zIndex: 1 }}>
     <button onClick={signOut}>Cerrar sesión</button>
     {error && <p role="alert">No se pudo cerrar la sesión.</p>}
   </div> : null;

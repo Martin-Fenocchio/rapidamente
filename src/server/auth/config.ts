@@ -7,12 +7,14 @@ import { playerService } from "../players/service";
 import { AppError } from "../http/errors";
 import { getDatabase } from "../db";
 
-export interface AuthConfig { secret: string; url: string; googleClientId?: string; googleClientSecret?: string }
+export interface AuthConfig { secret: string; url: string; googleClientId?: string; googleClientSecret?: string; trustedOrigins?: string[] }
 export function authConfig(): AuthConfig {
   const secret = process.env.BETTER_AUTH_SECRET;
-  const url = process.env.BETTER_AUTH_URL || (process.env.VERCEL_BRANCH_URL ? `https://${process.env.VERCEL_BRANCH_URL}` : undefined);
+  const host = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL;
+  const url = process.env.BETTER_AUTH_URL || (host ? `https://${host}` : undefined);
   if (!secret || secret.length < 32 || !url) throw new AppError("AUTH_NOT_CONFIGURED", 503);
-  return { secret, url, googleClientId: process.env.GOOGLE_CLIENT_ID, googleClientSecret: process.env.GOOGLE_CLIENT_SECRET };
+  const trustedOrigins = [...new Set([new URL(url).origin, ...[process.env.VERCEL_BRANCH_URL, process.env.VERCEL_URL].filter((value): value is string => Boolean(value)).map(host => `https://${host}`)])];
+  return { secret, url, trustedOrigins, googleClientId: process.env.GOOGLE_CLIENT_ID, googleClientSecret: process.env.GOOGLE_CLIENT_SECRET };
 }
 
 export function createAuth(db: Db, client: MongoClient, config: AuthConfig) {
@@ -28,7 +30,7 @@ export function createAuth(db: Db, client: MongoClient, config: AuthConfig) {
     session: { modelName: "authSessions", expiresIn: 60 * 60 * 24 * 7, cookieCache: { enabled: false } },
     verification: { modelName: "authVerifications" },
     emailAndPassword: { enabled: false },
-    trustedOrigins: [new URL(config.url).origin],
+    trustedOrigins: config.trustedOrigins ?? [new URL(config.url).origin],
     socialProviders: config.googleClientId && config.googleClientSecret ? {
       google: { clientId: config.googleClientId, clientSecret: config.googleClientSecret },
     } : {},

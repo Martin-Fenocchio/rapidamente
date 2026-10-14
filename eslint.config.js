@@ -4,7 +4,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist/**", ".next/**", "next-env.d.ts", "playwright-report/**", "test-results/**"] },
+  { ignores: ["dist/**", ".next/**", "next-env.d.ts", "playwright-report/**", "playwright-report-api/**", ".migration-private/**", "test-results/**"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   { languageOptions: { globals: { ...globals.browser, ...globals.node } } },

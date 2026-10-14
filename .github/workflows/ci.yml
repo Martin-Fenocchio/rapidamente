@@ -29,11 +29,13 @@ jobs:
       - run: npm run typecheck
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - run: npm run test:e2e:api
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: browser-failure-evidence
           path: |
             playwright-report/
+            playwright-report-api/
             test-results/
           retention-days: 7

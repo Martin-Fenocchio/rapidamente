@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { API_URL } from "src/lib/api";
 
 import { useAnalytics } from "src/hooks/useAnalytics";
 import {
@@ -22,6 +23,7 @@ export const useOnboardingLogic = () => {
   const [isSavingName, setIsSavingName] = useState(false);
   const [streak, setStreak] = useState(0);
   const [showModalSignIn, setShowModalSignIn] = useState(false);
+  const googleAvailable = useRef(false);
   const startTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => () => {
@@ -79,10 +81,20 @@ export const useOnboardingLogic = () => {
     const haveSignedIn = localStorage.getItem("GOOGLE_SIGNED_IN") == "true";
     const userID = localStorage.getItem("userID");
 
-    if (!haveSignedIn && userID && userID !== "undefined") {
+    if (googleAvailable.current && !haveSignedIn && userID && userID !== "undefined") {
       setShowModalSignIn(true);
     }
   };
+
+  useEffect(() => {
+    let active = true;
+    fetch(`${API_URL}/config`).then(response => response.json()).then(config => {
+      if (!active) return;
+      googleAvailable.current = config.googleSignInEnabled === true;
+      handleShowModalSignIn();
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     handleShowModalSignIn();

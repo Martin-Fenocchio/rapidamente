@@ -14,6 +14,7 @@ export async function endpoint(action: () => Promise<unknown>) {
   }
 }
 export function requireOrigin(request: Request) {
-  const expected = new URL(authConfig().url).origin;
-  if (request.headers.get("origin") !== expected) throw new AppError("INVALID_ORIGIN", 403);
+  const config = authConfig();
+  const allowed = config.trustedOrigins ?? [new URL(config.url).origin];
+  if (!allowed.includes(request.headers.get("origin") || "")) throw new AppError("INVALID_ORIGIN", 403);
 }
