@@ -47,6 +47,6 @@ Known tooling debt: React 18 is temporarily retained because `react-card-flip` d
 
 ## Real API browser suite
 
-`npm run test:e2e:api` uses `scripts/e2e-server.ts` to start a production Next.js server on port 4182 with an ephemeral MongoDB replica set. Six desktop/mobile journeys exercise real cookies and persistence. External requests are blocked; Google OAuth is not faked in production. The current date is used to avoid passing a stale daily challenge in future CI runs. Controlled browser clocks accelerate game waits without freezing module loading.
+`npm run test:e2e:api` uses `scripts/e2e-server.ts` to start a production Next.js server on port 4182 with an ephemeral MongoDB replica set. Six desktop/mobile journeys exercise real cookies and persistence. External requests are blocked; Google OAuth is not faked in production. The current date is used to avoid passing a stale daily challenge in future CI runs. Browser clocks pause only after the first question module loads, so slow assertions cannot consume its deadline; controlled advances exercise countdowns/timeouts, and clocks resume before result navigation. This avoids freezing dynamic module loading.
 
 The database-service suite, real API browser suite, and fixture UI suite all remain separate so failures identify the layer involved. CI runs every suite and preserves both Playwright reports on failure.

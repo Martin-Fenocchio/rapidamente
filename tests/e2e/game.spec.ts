@@ -55,6 +55,8 @@ async function startGame(page: Page) {
   await expect(page.locator(".countdown")).toBeVisible();
   await page.clock.runFor(4000);
   await expect(page.locator(".calculation .grid button")).toHaveCount(4);
+  // Pause only after the question module loads; assertions must not consume answer time.
+  await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now()) + 100));
 }
 
 test("registers a named player and preserves the ID after reload", async ({ page }) => {
@@ -87,6 +89,7 @@ test("finishes all ten questions and saves a ten-point result once", async ({ pa
     await page.locator(".calculation .grid").getByRole("button", { name: String(question.result), exact: true }).click();
   }
   await page.clock.runFor(2500);
+  await page.clock.resume();
   await expect(page).toHaveURL(/\/score$/);
   await expect(page.locator(".ticket h2")).toHaveText("10 PUNTOS");
   await expect.poll(() => saves.length).toBe(1);
@@ -103,6 +106,7 @@ test("ends on a wrong answer and blocks another attempt today", async ({ page })
   const labels = await choices.allTextContents();
   await page.locator(".calculation .grid").getByRole("button", { name: labels.find(label => Number(label) !== correct)!.trim(), exact: true }).click();
   await page.clock.runFor(2500);
+  await page.clock.resume();
   await expect(page.locator(".ticket h2")).toHaveText("0 PUNTOS");
   await page.goto("/");
   await expect(page.getByTestId("dailly-blocker")).toBeVisible();
@@ -115,6 +119,7 @@ test("times out at the configured deadline", async ({ page }) => {
   await page.clock.runFor(2500);
   await expect(page.getByText("Se agotó el tiempo")).toBeVisible();
   await page.clock.runFor(2500);
+  await page.clock.resume();
   await expect(page.locator(".ticket h2")).toHaveText("0 PUNTOS");
 });
 
@@ -124,7 +129,10 @@ test("retries a failed score save without losing the local result", async ({ pag
     ? { status: 503, json: { message: "offline" } }
     : { json: { points: 5, history: JSON.stringify([{ date: "10/14/2026", isoDate: "2026-10-14", pointsOfDay: 0, time: 3 }]) } }));
   await startGame(page);
-  await page.clock.runFor(5000);
+  await page.clock.runFor(2500);
+  await expect(page.getByText("Se agotó el tiempo")).toBeVisible();
+  await page.clock.runFor(2500);
+  await page.clock.resume();
   await expect(page.locator("main").getByRole("alert")).toContainText("No se pudo sincronizar");
   expect(await page.evaluate(() => localStorage.getItem("pendingScore"))).not.toBeNull();
   fail = false;

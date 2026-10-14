@@ -2,6 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/browser-api",
   workers: 1,
+  timeout: process.env.CI ? 60000 : 30000,
+  expect: { timeout: process.env.CI ? 10000 : 5000 },
   retries: 0,
   forbidOnly: Boolean(process.env.CI),
   reporter: [["list"], ["html", { outputFolder: "playwright-report-api", open: "never" }]],

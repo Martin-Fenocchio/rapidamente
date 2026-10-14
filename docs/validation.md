@@ -34,3 +34,5 @@ The build warns that React 18 is deprecated by Next.js because the current card-
 The earlier database milestone passed [GitHub Actions run 38639197462](https://github.com/Martin-Fenocchio/rapidamente/actions/runs/38639197462). The browser verification milestone is undergoing [run 38642570978](https://github.com/Martin-Fenocchio/rapidamente/actions/runs/38642570978); consult its final result and the branch's latest run before merging. Deployment documentation commits trigger the same complete workflow.
 
 A final session-restoration regression verifies that stale startup success/401 responses cannot overwrite a newly registered identity. Local tests cover both race outcomes and the normal restoration/legacy backup paths.
+
+A subsequent mobile real-API CI case exceeded its overall 30-second budget during registration/countdown. Both suites now use a 60-second CI budget, one worker, and paused question clocks; retries remain disabled. The complete local 16 + 6 browser cases passed after these harness changes.

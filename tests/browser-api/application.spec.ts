@@ -25,6 +25,8 @@ async function start(page: Page) {
   await expect(page.locator(".countdown")).toBeVisible();
   await page.clock.runFor(4000);
   await expect(page.locator(".calculation .grid button")).toHaveCount(4);
+  // Pause only after the question module loads; assertions must not consume answer time.
+  await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now()) + 100));
 }
 
 test("real guest session, private recovery, and logout", async ({ page, context, request }, info) => {
@@ -52,6 +54,7 @@ test("complete game persists once through the real API and survives reload", asy
     await page.locator(".calculation .grid").getByRole("button", { name: String(question.result), exact: true }).click();
   }
   await page.clock.runFor(2500);
+  await page.clock.resume();
   await expect(page).toHaveURL(/\/score$/, { timeout: 10000 });
   await expect(page.locator(".ticket h2")).toHaveText("10 PUNTOS");
   await expect.poll(async () => (await (await page.request.get("/api/me")).json()).points).toBe(10);
